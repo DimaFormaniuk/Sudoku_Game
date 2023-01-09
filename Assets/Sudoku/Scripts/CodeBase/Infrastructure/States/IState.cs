@@ -1,4 +1,4 @@
-namespace Sudoku.CodeBase.Infrastructure
+namespace Sudoku.Scripts.CodeBase.Infrastructure.States
 {
     public interface IState : IExitableState
     {

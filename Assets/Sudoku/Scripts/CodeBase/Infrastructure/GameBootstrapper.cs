@@ -1,6 +1,7 @@
+using Sudoku.Scripts.CodeBase.Infrastructure.States;
 using UnityEngine;
 
-namespace Sudoku.CodeBase.Infrastructure
+namespace Sudoku.Scripts.CodeBase.Infrastructure
 {
     public class GameBootstrapper : MonoBehaviour, ICoroutineRunner
     {

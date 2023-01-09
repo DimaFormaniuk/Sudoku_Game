@@ -1,19 +1,22 @@
 using System;
 using System.Collections.Generic;
+using Sudoku.Scripts.CodeBase.Infrastructure.Factory;
+using Sudoku.Scripts.CodeBase.Infrastructure.Services;
 
-namespace Sudoku.CodeBase.Infrastructure
+namespace Sudoku.Scripts.CodeBase.Infrastructure.States
 {
     public class GameStateMachine
     {
         private readonly Dictionary<Type, IExitableState> _states;
         private IExitableState _activeState;
 
-        public GameStateMachine(SceneLoader sceneLoader)
+        public GameStateMachine(SceneLoader sceneLoader, AllServices services)
         {
             _states = new Dictionary<Type, IExitableState>
             {
-                [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader),
-                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader)
+                [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
+                [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IGameFactory>()),
+                [typeof(GameLoopState)] = new GameLoopState(this)
             };
         }
 

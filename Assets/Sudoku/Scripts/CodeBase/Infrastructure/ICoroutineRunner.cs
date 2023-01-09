@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Sudoku.CodeBase.Infrastructure
+namespace Sudoku.Scripts.CodeBase.Infrastructure
 {
     public interface ICoroutineRunner
     {

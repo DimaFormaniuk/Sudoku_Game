@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Sudoku.CodeBase.Infrastructure
+namespace Sudoku.Scripts.CodeBase.Infrastructure
 {
     public class SceneLoader
     {
