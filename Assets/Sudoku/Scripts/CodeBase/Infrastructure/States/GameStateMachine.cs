@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Sudoku.Scripts.CodeBase.Infrastructure.Factory;
 using Sudoku.Scripts.CodeBase.Infrastructure.Services;
+using Sudoku.Scripts.CodeBase.Infrastructure.Services.PersistentProgress;
+using Sudoku.Scripts.CodeBase.Infrastructure.Services.SaveLoad;
 
 namespace Sudoku.Scripts.CodeBase.Infrastructure.States
 {
@@ -15,7 +17,8 @@ namespace Sudoku.Scripts.CodeBase.Infrastructure.States
             _states = new Dictionary<Type, IExitableState>
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
-                [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IGameFactory>()),
+                [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IGameFactory>(),services.Single<IPersistentProgressService>()),
+                [typeof(LoadProgressState)] = new LoadProgressState(this,services.Single<IPersistentProgressService>(),services.Single<ISaveLoadService>()),
                 [typeof(GameLoopState)] = new GameLoopState(this)
             };
         }

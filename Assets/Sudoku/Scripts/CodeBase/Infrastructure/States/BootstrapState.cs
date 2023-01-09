@@ -1,6 +1,8 @@
 using Sudoku.Scripts.CodeBase.Infrastructure.AssetManagement;
 using Sudoku.Scripts.CodeBase.Infrastructure.Factory;
 using Sudoku.Scripts.CodeBase.Infrastructure.Services;
+using Sudoku.Scripts.CodeBase.Infrastructure.Services.PersistentProgress;
+using Sudoku.Scripts.CodeBase.Infrastructure.Services.SaveLoad;
 
 namespace Sudoku.Scripts.CodeBase.Infrastructure.States
 {
@@ -31,13 +33,16 @@ namespace Sudoku.Scripts.CodeBase.Infrastructure.States
 
         private void EnterLoadLevel()
         {
-            _stateMachine.Enter<LoadMainState, string>("Main");
+            _stateMachine.Enter<LoadProgressState>();
         }
 
         private void RegisterServices()
         {
+            _services.RegisterSingle<IPersistentProgressService>(new PersistentProgressService());
             _services.RegisterSingle<IAssets>(new AssetProvider());
             _services.RegisterSingle<IGameFactory>(new GameFactory(_services.Single<IAssets>()));
+            _services.RegisterSingle<ISaveLoadService>(
+                new SaveLoadService(_services.Single<IPersistentProgressService>(), _services.Single<IGameFactory>()));
         }
     }
 }
