@@ -7,17 +7,13 @@ namespace CodeBase.UI.SelectLevel
     [RequireComponent(typeof(Button))]
     public class UIMenuButton : MonoBehaviour
     {
-        public readonly DifficultyGame DifficultyType;
-    
+        [SerializeField] private DifficultyGame _difficultyType;
+        public DifficultyGame DifficultyType => _difficultyType;
+
         [SerializeField] private Button _button;
 
         public event Action<UIMenuButton> Click;
 
-        public void Init()
-        {
-        
-        }
-    
         private void OnEnable() => 
             _button.onClick.AddListener(ClickCell);
 

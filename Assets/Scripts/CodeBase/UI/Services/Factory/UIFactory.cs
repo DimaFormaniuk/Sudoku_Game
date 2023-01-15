@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Logic.Services;
 using CodeBase.StaticData;
+using CodeBase.UI.SelectLevel;
 using UnityEngine;
 
 namespace CodeBase.UI.Services.Factory
 {
     public class UIFactory : IUIFactory
     {
-        public List<ISavedProgressReader> ProgressReaders { get; }
-        public List<ISavedProgress> ProgressWriters { get; }
+        public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
+        public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
         
         private readonly IStaticDataService _staticData;
         private readonly IPersistentProgressService _progressService;
@@ -33,9 +35,12 @@ namespace CodeBase.UI.Services.Factory
 
         public GameObject CreateMenu()
         {
-            return CreatePrefab(PrefabId.Menu);
+            var obj = CreatePrefab(PrefabId.Menu);
+            //obj.GetComponent<UISelectLevel>().Init(_progressService);
+
+            return obj;
         }
-        
+
         public GameObject CreateGame()
         {
             return CreatePrefab(PrefabId.Game);

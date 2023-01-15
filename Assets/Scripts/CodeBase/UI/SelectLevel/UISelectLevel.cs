@@ -1,6 +1,7 @@
 using CodeBase.Infrastructure.Services;
-using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CodeBase.UI.SelectLevel
 {
@@ -9,20 +10,27 @@ namespace CodeBase.UI.SelectLevel
         [SerializeField] private UISelectLevelMenu _uiSelectLevelMenu;
         [SerializeField] private UISelectLevelGrid _uiSelectLevelGrid;
 
-        private IPersistentProgressService _progressService;
-        
-        public void Init(IPersistentProgressService progressService)
-        {
-            _progressService = progressService;
-            //_progressService = AllServices.Container.Single<IPersistentProgressService>();
-        }
-        
+        [SerializeField] private Button _continueLastGame;
+        [SerializeField] private Button _startNewGame;
+
+        //private IPersistentProgressService _progressService;
+
         private void Awake()
         {
-            _progressService = AllServices.Container.Single<IPersistentProgressService>();
-            
-            _uiSelectLevelMenu.Init(_progressService);
-            _uiSelectLevelGrid.Init(_progressService, _uiSelectLevelMenu);
+            Init();
+        }
+
+        public void Init()
+        {
+            _uiSelectLevelGrid.Init(_uiSelectLevelMenu);
+        }
+
+        private void OnEnable()
+        {
+            var saveLoad = AllServices.Container.Single<ISaveLoadService>();
+
+            _continueLastGame.onClick.AddListener(() => saveLoad.SaveProgress());
+            _startNewGame.onClick.AddListener(() => saveLoad.InformProgressReaders());
         }
     }
 }

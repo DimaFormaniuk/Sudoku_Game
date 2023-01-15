@@ -10,25 +10,35 @@ namespace CodeBase.Infrastructure.Services.SaveLoad
         private const string ProgressKey = "Progress";
 
         private readonly IPersistentProgressService _progressService;
-        private readonly IUIFactory _gameFactory;
+        private readonly IUIFactory _uiFactory;
 
-        public SaveLoadService(IPersistentProgressService progressService, IUIFactory gameFactory)
+        public SaveLoadService(IPersistentProgressService progressService, IUIFactory uiFactory)
         {
             _progressService = progressService;
-            _gameFactory = gameFactory;
+            _uiFactory = uiFactory;
         }
 
         public void SaveProgress()
         {
-            foreach (ISavedProgress progressWriter in _gameFactory.ProgressWriters)
+            foreach (ISavedProgress progressWriter in _uiFactory.ProgressWriters)
                 progressWriter.UpdateProgress(_progressService.PlayerProgress);
 
             PlayerPrefs.SetString(ProgressKey, _progressService.PlayerProgress.ToJson());
+
+            Debug.Log("Save");
         }
 
         public PlayerProgress LoadProgress()
         {
+            Debug.Log("Load");
+
             return PlayerPrefs.GetString(ProgressKey).AsDeserelize<PlayerProgress>();
+        }
+        
+        public void InformProgressReaders()
+        {
+            foreach (ISavedProgressReader progressReader in _uiFactory.ProgressReaders)
+                progressReader.LoadProgress(_progressService.PlayerProgress);
         }
     }
 }

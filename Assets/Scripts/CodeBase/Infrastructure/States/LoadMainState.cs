@@ -1,5 +1,6 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.PersistentProgress;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Services.Factory;
 
 namespace CodeBase.Infrastructure.States
@@ -9,15 +10,14 @@ namespace CodeBase.Infrastructure.States
         private readonly GameStateMachine _gameStateMachine;
         private readonly SceneLoader _sceneLoader;
         private readonly IUIFactory _uiFactory;
-        private readonly IPersistentProgressService _progressService;
+        private readonly ISaveLoadService _saveLoadService;
 
-        public LoadMainState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, IUIFactory uiFactory,
-            IPersistentProgressService progressService)
+        public LoadMainState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, IUIFactory uiFactory, ISaveLoadService saveLoadService)
         {
             _gameStateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
             _uiFactory = uiFactory;
-            _progressService = progressService;
+            _saveLoadService = saveLoadService;
         }
 
         public void Enter()
@@ -39,16 +39,15 @@ namespace CodeBase.Infrastructure.States
             _gameStateMachine.Enter<GameLoopState>();
         }
 
+        private void InformProgressReaders()
+        {
+            _saveLoadService.InformProgressReaders();
+        }
+
         private void InitUIRoot() =>
             _uiFactory.CreateUIRoot();
 
         private void InitMenu() =>
             _uiFactory.CreateMenu();
-
-        private void InformProgressReaders()
-        {
-            foreach (ISavedProgressReader progressReader in _uiFactory.ProgressReaders)
-                progressReader.LoadProgress(_progressService.PlayerProgress);
-        }
     }
 }

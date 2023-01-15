@@ -41,8 +41,8 @@ namespace CodeBase.Infrastructure.States
             RegisterStaticData();
             
             _services.RegisterSingle<IPersistentProgressService>(new PersistentProgressService());
-            _services.RegisterSingle<ISaveLoadService>(new SaveLoadService(_services.Single<IPersistentProgressService>(), _services.Single<IUIFactory>()));
             _services.RegisterSingle<IUIFactory>(new UIFactory(_services.Single<IStaticDataService>(),_services.Single<IPersistentProgressService>()));
+            _services.RegisterSingle<ISaveLoadService>(new SaveLoadService(_services.Single<IPersistentProgressService>(), _services.Single<IUIFactory>()));
         }
         
         private void RegisterStaticData()
