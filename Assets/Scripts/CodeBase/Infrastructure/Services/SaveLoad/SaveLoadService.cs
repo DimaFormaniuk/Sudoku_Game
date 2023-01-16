@@ -21,9 +21,9 @@ namespace CodeBase.Infrastructure.Services.SaveLoad
         public void SaveProgress()
         {
             foreach (ISavedProgress progressWriter in _uiFactory.ProgressWriters)
-                progressWriter.UpdateProgress(_progressService.PlayerProgress);
+                progressWriter.UpdateProgress(_progressService.Progress);
 
-            PlayerPrefs.SetString(ProgressKey, _progressService.PlayerProgress.ToJson());
+            PlayerPrefs.SetString(ProgressKey, _progressService.Progress.ToJson());
 
             Debug.Log("Save");
         }
@@ -38,7 +38,7 @@ namespace CodeBase.Infrastructure.Services.SaveLoad
         public void InformProgressReaders()
         {
             foreach (ISavedProgressReader progressReader in _uiFactory.ProgressReaders)
-                progressReader.LoadProgress(_progressService.PlayerProgress);
+                progressReader.LoadProgress(_progressService.Progress);
         }
     }
 }

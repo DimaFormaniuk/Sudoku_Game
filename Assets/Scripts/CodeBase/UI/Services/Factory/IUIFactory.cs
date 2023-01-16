@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using CodeBase.Infrastructure.Services;
-using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
@@ -12,8 +11,10 @@ namespace CodeBase.UI.Services.Factory
         List<ISavedProgress> ProgressWriters { get; }
         GameObject CreateUIRoot();
         GameObject CreateMenu();
-        GameObject CreateGame();
+        GameObject CreateNewGame();
+        GameObject CreateContinueGame();
         GameObject CreateEndGame();
         void Cleanup();
+        void ClearRoot();
     }
 }

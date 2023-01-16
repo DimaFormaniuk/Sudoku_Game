@@ -1,5 +1,4 @@
 using CodeBase.Data;
-using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Services.Factory;
 
@@ -36,7 +35,7 @@ namespace CodeBase.Infrastructure.States
             InitMenu();
             InformProgressReaders();
 
-            _gameStateMachine.Enter<GameLoopState>();
+            _gameStateMachine.Enter<SelectLevelState>();
         }
 
         private void InformProgressReaders()

@@ -3,7 +3,6 @@ using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Logic.Services;
 using CodeBase.StaticData;
-using CodeBase.UI.SelectLevel;
 using UnityEngine;
 
 namespace CodeBase.UI.Services.Factory
@@ -12,11 +11,13 @@ namespace CodeBase.UI.Services.Factory
     {
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
-        
+
         private readonly IStaticDataService _staticData;
         private readonly IPersistentProgressService _progressService;
-        
+
         private Transform _uiRoot;
+
+        private List<GameObject> _gameObjectsInRoot = new List<GameObject>();
 
         public UIFactory(IStaticDataService staticData, IPersistentProgressService progressService)
         {
@@ -29,29 +30,51 @@ namespace CodeBase.UI.Services.Factory
             GameObject root = CreatePrefab(PrefabId.UIRoot);
             root.GetComponent<Canvas>().worldCamera = Camera.main;
             _uiRoot = root.transform;
-            
+
             return root;
         }
 
         public GameObject CreateMenu()
         {
-            var obj = CreatePrefab(PrefabId.Menu);
-            //obj.GetComponent<UISelectLevel>().Init(_progressService);
-
-            return obj;
+            return CreatePrefabInRoot(PrefabId.Menu);
         }
 
-        public GameObject CreateGame()
+        public GameObject CreateNewGame()
         {
-            return CreatePrefab(PrefabId.Game);
+            var prefabInRoot = CreatePrefabInRoot(PrefabId.Game);
+            prefabInRoot.GetComponent<SudokuGame.SudokuGame>().NewGame(_progressService.Progress.LevelMenuData);
+            
+            return prefabInRoot;
+        }
+
+        public GameObject CreateContinueGame()
+        {
+            var prefabInRoot = CreatePrefabInRoot(PrefabId.Game);
+            prefabInRoot.GetComponent<SudokuGame.SudokuGame>().ContinueGame(_progressService.Progress.LastGameData);
+            
+            return prefabInRoot;
         }
         
         public GameObject CreateEndGame()
         {
-            return CreatePrefab(PrefabId.EndGame);
+            return CreatePrefabInRoot(PrefabId.EndGame);
         }
 
-        public void Register(ISavedProgressReader progressReader)
+        public void Cleanup()
+        {
+            ProgressReaders.Clear();
+            ProgressWriters.Clear();
+        }
+
+        public void ClearRoot()
+        {
+            foreach (GameObject gameObject in _gameObjectsInRoot)
+                Object.Destroy(gameObject);
+            
+            _gameObjectsInRoot.Clear();
+        }
+
+        private void Register(ISavedProgressReader progressReader)
         {
             if (progressReader is ISavedProgress progressWriter)
                 ProgressWriters.Add(progressWriter);
@@ -59,10 +82,12 @@ namespace CodeBase.UI.Services.Factory
             ProgressReaders.Add(progressReader);
         }
 
-        public void Cleanup()
+        private GameObject CreatePrefabInRoot(PrefabId prefabId)
         {
-            ProgressReaders.Clear();
-            ProgressWriters.Clear();
+           var prefab = CreatePrefab(prefabId);
+           _gameObjectsInRoot.Add(prefab);
+           
+           return prefab;
         }
         
         private void RegisterProgressWatchers(GameObject gameObject)
@@ -77,7 +102,7 @@ namespace CodeBase.UI.Services.Factory
             var prefab = Object.Instantiate(config.Prefab, _uiRoot);
 
             RegisterProgressWatchers(prefab);
-            
+
             return prefab;
         }
     }

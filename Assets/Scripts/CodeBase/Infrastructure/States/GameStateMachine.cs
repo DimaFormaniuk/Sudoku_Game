@@ -7,7 +7,7 @@ using CodeBase.UI.Services.Factory;
 
 namespace CodeBase.Infrastructure.States
 {
-    public class GameStateMachine
+    public class GameStateMachine : IGameStateMachine
     {
         private readonly Dictionary<Type, IExitableState> _states;
         private IExitableState _activeState;
@@ -17,10 +17,11 @@ namespace CodeBase.Infrastructure.States
             _states = new Dictionary<Type, IExitableState>
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
-                [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(),
-                    services.Single<ISaveLoadService>()),
-                [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IUIFactory>(),
-                    services.Single<ISaveLoadService>()),
+                [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
+                [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IUIFactory>(), services.Single<ISaveLoadService>()),
+                [typeof(SelectLevelState)] = new SelectLevelState(this),
+                [typeof(NewGameState)] = new NewGameState(this,services.Single<IUIFactory>()),
+                [typeof(ContinueGameState)] = new ContinueGameState(this,services.Single<IUIFactory>()),
                 [typeof(GameLoopState)] = new GameLoopState(this)
             };
         }
@@ -31,7 +32,7 @@ namespace CodeBase.Infrastructure.States
             state.Enter();
         }
 
-        public void Enter<TState, TPayLoad>(TPayLoad payLoad) where TState : class, IPaylodedState<TPayLoad>
+        public void Enter<TState, TPayLoad>(TPayLoad payLoad) where TState : class, IPayloadedState<TPayLoad>
         {
             TState state = ChangeState<TState>();
             state.Enter(payLoad);

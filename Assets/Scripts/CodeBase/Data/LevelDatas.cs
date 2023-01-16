@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CodeBase.UI.SelectLevel;
+using CodeBase.UI.Menu;
 
 namespace CodeBase.Data
 {

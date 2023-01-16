@@ -1,21 +1,18 @@
 using System;
-using CodeBase.UI.SelectLevel;
 
 namespace CodeBase.Data
 {
     [Serializable]
     public class PlayerProgress
     {
-        public int LastSelectLevel;
-        public DifficultyGame DifficultyGame;
-
+        public LevelMenuData LevelMenuData;
+        public LastGameData LastGameData;
         public LevelDatas LevelDatas;
 
         public PlayerProgress()
         {
-            LastSelectLevel = 1;
-            DifficultyGame = DifficultyGame.Easy;
-
+            LevelMenuData = new LevelMenuData();
+            LastGameData = new LastGameData();
             LevelDatas = new LevelDatas();
         }
     }

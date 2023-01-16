@@ -5,7 +5,7 @@ namespace CodeBase.Infrastructure.States
         void Enter();
     }
 
-    public interface IPaylodedState<TPayload> : IExitableState
+    public interface IPayloadedState<TPayload> : IExitableState
     {
         void Enter(TPayload payload);
     }
