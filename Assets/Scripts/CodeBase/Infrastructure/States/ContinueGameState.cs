@@ -12,8 +12,8 @@ namespace CodeBase.Infrastructure.States
             _gameStateMachine = gameStateMachine;
             _uiFactory = uiFactory;
         }
-        
-        public void Exit()
+
+        public void Enter()
         {
             _uiFactory.Cleanup();
             _uiFactory.ClearRoot();
@@ -22,9 +22,8 @@ namespace CodeBase.Infrastructure.States
             _gameStateMachine.Enter<GameLoopState>();
         }
 
-        public void Enter()
+        public void Exit()
         {
-            
         }
     }
 }
