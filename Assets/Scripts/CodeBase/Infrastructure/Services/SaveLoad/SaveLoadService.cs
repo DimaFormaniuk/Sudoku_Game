@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.PersistentProgress;
-using CodeBase.UI.Services.Factory;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Services.SaveLoad
@@ -9,18 +9,19 @@ namespace CodeBase.Infrastructure.Services.SaveLoad
     {
         private const string ProgressKey = "Progress";
 
+        public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
+        public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
+        
         private readonly IPersistentProgressService _progressService;
-        private readonly IUIFactory _uiFactory;
 
-        public SaveLoadService(IPersistentProgressService progressService, IUIFactory uiFactory)
+        public SaveLoadService(IPersistentProgressService progressService)
         {
             _progressService = progressService;
-            _uiFactory = uiFactory;
         }
 
         public void SaveProgress()
         {
-            foreach (ISavedProgress progressWriter in _uiFactory.ProgressWriters)
+            foreach (ISavedProgress progressWriter in ProgressWriters)
                 progressWriter.UpdateProgress(_progressService.Progress);
 
             PlayerPrefs.SetString(ProgressKey, _progressService.Progress.ToJson());
@@ -37,8 +38,28 @@ namespace CodeBase.Infrastructure.Services.SaveLoad
         
         public void InformProgressReaders()
         {
-            foreach (ISavedProgressReader progressReader in _uiFactory.ProgressReaders)
+            foreach (ISavedProgressReader progressReader in ProgressReaders)
                 progressReader.LoadProgress(_progressService.Progress);
+        }
+
+        public void Register(GameObject gameObject)
+        {
+            foreach (ISavedProgressReader progressReader in gameObject.GetComponentsInChildren<ISavedProgressReader>())
+                Register(progressReader);
+        }
+        
+        public void Cleanup()
+        {
+            ProgressReaders.Clear();
+            ProgressWriters.Clear();
+        }
+
+        public void Register(ISavedProgressReader progressReader)
+        {
+            if (progressReader is ISavedProgress progressWriter)
+                ProgressWriters.Add(progressWriter);
+
+            ProgressReaders.Add(progressReader);
         }
     }
 }

@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Logic.Services;
 using CodeBase.UI.Services.Factory;
+using CodeBase.UI.Services.Theme;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -43,13 +44,21 @@ namespace CodeBase.Infrastructure.States
             _services.RegisterSingle<IGameStateMachine>(_stateMachine);
             _services.RegisterSingle<IPersistentProgressService>(new PersistentProgressService());
             _services.RegisterSingle<IUIFactory>(new UIFactory(_services.Single<IStaticDataService>(),_services.Single<IPersistentProgressService>()));
-            _services.RegisterSingle<ISaveLoadService>(new SaveLoadService(_services.Single<IPersistentProgressService>(), _services.Single<IUIFactory>()));
+            _services.RegisterSingle<ISaveLoadService>(new SaveLoadService(_services.Single<IPersistentProgressService>()));
+
+            RegisterThemeService();
         }
-        
+
         private void RegisterStaticData()
         {
             _services.RegisterSingle<IStaticDataService>(new StaticDataService());
             _services.Single<IStaticDataService>().Load();
+        }
+        
+        private void RegisterThemeService()
+        {
+            _services.RegisterSingle<IThemeService>(new ThemeService(_services.Single<IStaticDataService>()));
+            _services.Single<ISaveLoadService>().Register((ISavedProgressReader)_services.Single<IThemeService>());
         }
     }
 }

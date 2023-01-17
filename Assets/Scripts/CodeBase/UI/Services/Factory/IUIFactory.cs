@@ -1,20 +1,16 @@
-using System.Collections.Generic;
 using CodeBase.Infrastructure.Services;
-using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.UI.Services.Factory
 {
-    public interface IUIFactory : IService
+    public interface IUIFactory : IService, ICleanup
     {
-        List<ISavedProgressReader> ProgressReaders { get; }
-        List<ISavedProgress> ProgressWriters { get; }
+        void Registered(IRegistered registered);
         GameObject CreateUIRoot();
         GameObject CreateMenu();
         GameObject CreateNewGame();
         GameObject CreateContinueGame();
         GameObject CreateEndGame();
-        void Cleanup();
         void ClearRoot();
     }
 }

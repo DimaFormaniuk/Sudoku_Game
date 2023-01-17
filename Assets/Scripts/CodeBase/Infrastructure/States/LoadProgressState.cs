@@ -22,7 +22,7 @@ namespace CodeBase.Infrastructure.States
         {
             LoadProgressOrInitNew();
             
-            _stateMachine.Enter<LoadMainState>();
+            _stateMachine.Enter<LateRegistrationState>();
         }
 
         public void Exit()

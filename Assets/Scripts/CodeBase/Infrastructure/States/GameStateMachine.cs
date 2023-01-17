@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Services.Factory;
+using CodeBase.UI.Services.Theme;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -18,9 +19,10 @@ namespace CodeBase.Infrastructure.States
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
                 [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
+                [typeof(LateRegistrationState)] = new LateRegistrationState(this, services),
                 [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IUIFactory>(), services.Single<ISaveLoadService>()),
                 [typeof(SelectLevelState)] = new SelectLevelState(this),
-                [typeof(NewGameState)] = new NewGameState(this,services.Single<IUIFactory>()),
+                [typeof(NewGameState)] = new NewGameState(this,services.Single<IUIFactory>(),services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
                 [typeof(ContinueGameState)] = new ContinueGameState(this,services.Single<IUIFactory>()),
                 [typeof(GameLoopState)] = new GameLoopState(this)
             };
