@@ -6,6 +6,7 @@ public class UIInputNumbers : MonoBehaviour
 {
     public event Action<int> ClickNumber;
 
+    public List<UIButtonNumber> UIButtonNumbers => _uiButtonNumbers;
     [SerializeField] private List<UIButtonNumber> _uiButtonNumbers;
 
     public void Init()

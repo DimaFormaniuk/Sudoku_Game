@@ -11,17 +11,30 @@ namespace CodeBase.UI.SudokuGame
 
         [SerializeField] private UIGameBoard _uiGameBoard;
         [SerializeField] private UIInputNumbers _uiInputNumbers;
+        
+        private LevelMenuData _progressLevelMenuData;
+        private LastGameData _progressLastGameData;
 
-        public void NewGame(LevelMenuData progressLevelMenuData)
+        public void InitNewGame(LevelMenuData progressLevelMenuData)
         {
-            string data = LoadLevel(progressLevelMenuData.DifficultyGame, progressLevelMenuData.LastSelectLevel);
+            _progressLevelMenuData = progressLevelMenuData;
+        }
+        
+        public void InitContinueGame(LastGameData progressLastGameData)
+        {
+            _progressLastGameData = progressLastGameData;
+        }
+        
+        public void NewGame()
+        {
+            string data = LoadLevel(_progressLevelMenuData.DifficultyGame, _progressLevelMenuData.LastSelectLevel);
             _uiInputNumbers.Init();
             _uiGameBoard.Init(ParseLevel(data), _uiInputNumbers);
         }
 
-        public void ContinueGame(LastGameData progressLastGameData)
+        public void ContinueGame()
         {
-            string data = LoadLevel(progressLastGameData.DifficultyGame, progressLastGameData.IndexLevel);
+            string data = LoadLevel(_progressLastGameData.DifficultyGame, _progressLastGameData.IndexLevel);
             _uiInputNumbers.Init();
             _uiGameBoard.Init(ParseLevel(data), _uiInputNumbers);
         }

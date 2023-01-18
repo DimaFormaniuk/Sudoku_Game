@@ -49,6 +49,6 @@ public class UIButtonNumber : MonoBehaviour
     private void OnClick()
     {
         ClickNumber?.Invoke(Number);
-        Debug.LogError($"{Number}");
+        //Debug.LogError($"{Number}");
     }
 }

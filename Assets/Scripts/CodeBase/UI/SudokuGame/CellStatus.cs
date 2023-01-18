@@ -8,6 +8,7 @@ namespace CodeBase.UI.SudokuGame
         Select,
         Unselect,
         LineSelector,
-        Error
+        Error,
+        DeniesCell
     }
 }

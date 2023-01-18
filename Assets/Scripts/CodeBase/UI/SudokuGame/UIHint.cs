@@ -12,11 +12,23 @@ namespace CodeBase.UI.SudokuGame
         public void Init(int number)
         {
             Number = number;
+
+            RefreshUI();
         }
 
         public void Hide()
         {
             _text.gameObject.SetActive(false);
+        }
+
+        public void Show()
+        {
+            _text.gameObject.SetActive(true);
+        }
+
+        private void RefreshUI()
+        {
+            _text.text = $"{Number}";
         }
     }
 }

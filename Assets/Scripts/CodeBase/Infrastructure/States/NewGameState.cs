@@ -1,6 +1,7 @@
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Services.Factory;
 using CodeBase.UI.Services.Theme;
+using CodeBase.UI.SudokuGame;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -23,11 +24,13 @@ namespace CodeBase.Infrastructure.States
         {
             _uiFactory.Cleanup();
             _uiFactory.ClearRoot();
-            _uiFactory.CreateNewGame();
+            var game = _uiFactory.CreateNewGame();
             
             _saveLoadService.InformProgressReaders();
             _themeService.InfomThemeListeners();
 
+            game.GetComponent<SudokuGame>().NewGame();
+            
             _gameStateMachine.Enter<GameLoopState>();
         }
 

@@ -45,7 +45,7 @@ namespace CodeBase.UI.Services.Factory
         public GameObject CreateNewGame()
         {
             var prefabInRoot = CreatePrefabInRoot(PrefabId.Game);
-            prefabInRoot.GetComponent<SudokuGame.SudokuGame>().NewGame(_progressService.Progress.LevelMenuData);
+            prefabInRoot.GetComponent<SudokuGame.SudokuGame>().InitNewGame(_progressService.Progress.LevelMenuData);
 
             return prefabInRoot;
         }
@@ -53,7 +53,7 @@ namespace CodeBase.UI.Services.Factory
         public GameObject CreateContinueGame()
         {
             var prefabInRoot = CreatePrefabInRoot(PrefabId.Game);
-            prefabInRoot.GetComponent<SudokuGame.SudokuGame>().ContinueGame(_progressService.Progress.LastGameData);
+            prefabInRoot.GetComponent<SudokuGame.SudokuGame>().InitContinueGame(_progressService.Progress.LastGameData);
 
             return prefabInRoot;
         }

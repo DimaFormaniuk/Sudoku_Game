@@ -23,5 +23,13 @@ namespace CodeBase.UI.SudokuGame
             for (int i = 0; i < _hints.Count; i++)
                 _hints[i].Hide();
         }
+        
+        public void SetHints(List<int> hints)
+        {
+            HideAll();
+
+            foreach (var index in hints)
+                _hints[index - 1].Show();
+        }
     }
 }

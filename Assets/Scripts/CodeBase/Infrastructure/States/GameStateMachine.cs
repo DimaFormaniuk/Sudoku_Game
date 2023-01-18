@@ -23,7 +23,7 @@ namespace CodeBase.Infrastructure.States
                 [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IUIFactory>(), services.Single<ISaveLoadService>()),
                 [typeof(SelectLevelState)] = new SelectLevelState(this),
                 [typeof(NewGameState)] = new NewGameState(this,services.Single<IUIFactory>(),services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
-                [typeof(ContinueGameState)] = new ContinueGameState(this,services.Single<IUIFactory>()),
+                [typeof(ContinueGameState)] = new ContinueGameState(this,services.Single<IUIFactory>(),services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
                 [typeof(GameLoopState)] = new GameLoopState(this)
             };
         }
