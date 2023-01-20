@@ -1,23 +1,24 @@
 using System.Collections.Generic;
+using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
 
 namespace CodeBase.UI.SudokuGame
 {
-    public class UIGameBoard : MonoBehaviour
+    public class UIGameBoard : MonoBehaviour, IUIInputListener
     {
         private const int Size = 9;
 
         [SerializeField] private List<UIBlockCells> _uiBlockCells;
-        private UIInputNumbers _uiInputNumbers;
 
         private UICellNumber[,] _boardArray;
         private List<UICellNumber> _boardList;
 
         private UICellNumber _selectedCell;
+        private IUIInput _input;
 
-        public void Init(List<int> parseData, UIInputNumbers uiInputNumbers)
+        public void Init(List<int> parseData, IUIInput input)
         {
-            _uiInputNumbers = uiInputNumbers;
+            _input = input;
 
             SetLevelNumber(parseData);
             InitBoard();
@@ -27,7 +28,69 @@ namespace CodeBase.UI.SudokuGame
             RefreshBoard();
             RefreshLeftCountNumber();
 
-            AutoSetHints();
+            //AutoSetHints();
+        }
+
+        public void InputNumber(int number)
+        {
+            _selectedCell.SetUserNumber(number);
+
+            RefreshBoard();
+            ShowAllTheSameNumber();
+            CheckError();
+            RefreshLeftCountNumber();
+            CheckEndGame();
+
+            RefreshUserInputHints();
+        }
+
+        public void InputHint(int number)
+        {
+            if (CanInputHint())
+            {
+                if (CheckPossibleHint(number))
+                    _selectedCell.SetUserHint(number);
+                else
+                    ShowDeniesForHints(number);
+
+                RefreshInputHints();
+            }
+
+            RefreshBoard();
+            ShowAllTheSameNumber();
+            CheckError();
+            RefreshLeftCountNumber();
+        }
+
+        private bool CanInputHint()
+        {
+            return _selectedCell.Number == 0;
+        }
+
+        public void ClickClear()
+        {
+            _selectedCell.ClearNumber();
+            _selectedCell.ClearHints();
+
+            RefreshBoard();
+            ShowAllTheSameNumber();
+            CheckError();
+            RefreshLeftCountNumber();
+        }
+
+        public void RefreshInputHints()
+        {
+            _input.HintsInCell(_selectedCell.GetHints());
+        }
+
+        private void OnClickCell(UICellNumber cellNumber)
+        {
+            _selectedCell = cellNumber;
+
+            CheckErrorSelectCell();
+            RefreshBoard();
+            ShowAllTheSameNumber();
+            RefreshInputHints();
         }
 
         private UICellNumber FindFirsEmptyCell()
@@ -71,34 +134,12 @@ namespace CodeBase.UI.SudokuGame
 
         private void Subscrible()
         {
-            _uiInputNumbers.ClickNumber += OnInputNumber;
             _boardList.ForEach(x => x.ClickCell += OnClickCell);
         }
 
         private void Unsubscrible()
         {
-            _uiInputNumbers.ClickNumber -= OnInputNumber;
             _boardList.ForEach(x => x.ClickCell -= OnClickCell);
-        }
-
-        private void OnInputNumber(int number)
-        {
-            _selectedCell.SetUserNumber(number);
-
-            RefreshBoard();
-            ShowAllTheSameNumber();
-            CheckError();
-            RefreshLeftCountNumber();
-            CheckEndGame();
-        }
-
-        private void OnClickCell(UICellNumber cellNumber)
-        {
-            _selectedCell = cellNumber;
-
-            CheckErrorSelectCell();
-            RefreshBoard();
-            ShowAllTheSameNumber();
         }
 
         private void CheckError()
@@ -228,8 +269,8 @@ namespace CodeBase.UI.SudokuGame
 
         private void RefreshLeftCountNumber()
         {
-            foreach (var uiButtonNumber in _uiInputNumbers.UIButtonNumbers)
-                uiButtonNumber.RefreshLeftNumber(CalculateLeftNumber(uiButtonNumber.Number));
+            for (int number = 1; number < Size; number++)
+                _input.RefreshLeftNumber(number, CalculateLeftNumber(number));
         }
 
         private int CalculateLeftNumber(int number) =>
@@ -241,25 +282,48 @@ namespace CodeBase.UI.SudokuGame
             {
                 if (cellNumber.LevelNumber == false && cellNumber.Number == 0)
                 {
-                    List<int> hints = new List<int>();
-                    for (int i = 1; i <= Size; i++)
-                        hints.Add(i);
-
-                    List<UICellNumber> numbers = GetCrossCells(cellNumber);
-
-                    foreach (var uiCellNumber in numbers)
-                    {
-                        if (uiCellNumber.Number != 0 && (uiCellNumber.CorrectNumber || uiCellNumber.LevelNumber))
-                        {
-                            if (hints.Contains(uiCellNumber.Number))
-                            {
-                                hints.Remove(uiCellNumber.Number);
-                            }
-                        }
-                    }
+                    var hints = GetPossiblyHints(cellNumber);
 
                     cellNumber.SetHints(hints);
                 }
+            }
+        }
+
+        private List<int> GetPossiblyHints(UICellNumber cellNumber)
+        {
+            List<int> hints = new List<int>();
+            for (int i = 1; i <= Size; i++)
+                hints.Add(i);
+
+            List<UICellNumber> numbers = GetCrossCells(cellNumber);
+            foreach (var uiCellNumber in numbers)
+                if (uiCellNumber.Number != 0 && (uiCellNumber.CorrectNumber || uiCellNumber.LevelNumber))
+                    if (hints.Contains(uiCellNumber.Number))
+                        hints.Remove(uiCellNumber.Number);
+
+            return hints;
+        }
+
+        private void ShowDeniesForHints(int number)
+        {
+            foreach (UICellNumber uiCellNumber in GetCrossCells(_selectedCell))
+                if (uiCellNumber.Number == number)
+                    uiCellNumber.ShowDeniesForHints();
+        }
+
+        private bool CheckPossibleHint(int number)
+        {
+            return GetPossiblyHints(_selectedCell).Contains(number);
+        }
+
+        private void RefreshUserInputHints()
+        {
+            foreach (UICellNumber uiCellNumber in _boardList)
+            {
+                List<int> list = uiCellNumber.GetHints();
+                List<int> possibleNumbers = GetPossiblyHints(uiCellNumber);
+                List<int> result = list.FindAll(x => possibleNumbers.Contains(x));
+                uiCellNumber.SetHints(result);
             }
         }
     }

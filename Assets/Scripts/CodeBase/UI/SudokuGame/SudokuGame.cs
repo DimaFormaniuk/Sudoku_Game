@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.UI.Menu;
+using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
 
 namespace CodeBase.UI.SudokuGame
@@ -10,8 +11,8 @@ namespace CodeBase.UI.SudokuGame
         private const string Path = "Levels/Level";
 
         [SerializeField] private UIGameBoard _uiGameBoard;
-        [SerializeField] private UIInputNumbers _uiInputNumbers;
-        
+        [SerializeField] private UIInput _uiInput;
+
         private LevelMenuData _progressLevelMenuData;
         private LastGameData _progressLastGameData;
 
@@ -19,24 +20,24 @@ namespace CodeBase.UI.SudokuGame
         {
             _progressLevelMenuData = progressLevelMenuData;
         }
-        
+
         public void InitContinueGame(LastGameData progressLastGameData)
         {
             _progressLastGameData = progressLastGameData;
         }
-        
+
         public void NewGame()
         {
             string data = LoadLevel(_progressLevelMenuData.DifficultyGame, _progressLevelMenuData.LastSelectLevel);
-            _uiInputNumbers.Init();
-            _uiGameBoard.Init(ParseLevel(data), _uiInputNumbers);
+            _uiInput.Init(_uiGameBoard);
+            _uiGameBoard.Init(ParseLevel(data), _uiInput);
         }
 
         public void ContinueGame()
         {
             string data = LoadLevel(_progressLastGameData.DifficultyGame, _progressLastGameData.IndexLevel);
-            _uiInputNumbers.Init();
-            _uiGameBoard.Init(ParseLevel(data), _uiInputNumbers);
+            _uiInput.Init(_uiGameBoard);
+            _uiGameBoard.Init(ParseLevel(data), _uiInput);
         }
 
         private string LoadLevel(DifficultyGame difficultyGame, int index)

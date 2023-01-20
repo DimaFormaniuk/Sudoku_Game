@@ -13,10 +13,9 @@ namespace CodeBase.UI.SudokuGame
         public int IndexCell { get; private set; }
         public Vector2Int IndexCellVector { get; private set; }
         public int IndexBlock { get; private set; }
-        public CellStatus CellStatus => _cellStatus;
-        public bool UserInputNumber => _userInputNumber;
         public bool LevelNumber => _looked;
         public bool CorrectNumber => _correctNumber;
+
 
         public event Action<UICellNumber> ClickCell;
 
@@ -24,6 +23,7 @@ namespace CodeBase.UI.SudokuGame
         [SerializeField] private TMP_Text _numberText;
         [SerializeField] private Image _background;
         [SerializeField] private UIHints _uiHints;
+        [SerializeField] private Animation _deniesForHint;
 
         private bool _looked;
         private ThemeConfigs _themeConfigs;
@@ -65,10 +65,10 @@ namespace CodeBase.UI.SudokuGame
             _userInputNumber = true;
             _cellStatus = CellStatus.UserNumber;
             Number = number;
-            
+
             RefreshUI();
             RefreshColor();
-            HideHints();
+            ClearHints();
         }
 
         public void CellCorrectNumber()
@@ -185,10 +185,25 @@ namespace CodeBase.UI.SudokuGame
         {
             _uiHints.SetHints(hints);
         }
-        
-        private void HideHints()
+
+        public void SetUserHint(int number)
+        {
+            _uiHints.SetUserHint(number);
+        }
+
+        public void ClearHints()
         {
             _uiHints.HideAll();
+        }
+
+        public void ShowDeniesForHints()
+        {
+            _deniesForHint.Play();
+        }
+
+        public List<int> GetHints()
+        {
+            return _uiHints.GetHints();
         }
     }
 }

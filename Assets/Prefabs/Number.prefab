@@ -235,6 +235,7 @@ MonoBehaviour:
   _button: {fileID: 4812571682417682324}
   _numberText: {fileID: 3379151771567458781}
   _leftCountText: {fileID: 3379151769644945050}
+  _background: {fileID: 3379151770930966524}
 --- !u!1 &3379151770930966526
 GameObject:
   m_ObjectHideFlags: 0

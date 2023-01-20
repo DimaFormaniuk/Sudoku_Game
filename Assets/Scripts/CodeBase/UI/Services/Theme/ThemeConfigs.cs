@@ -19,5 +19,16 @@ namespace CodeBase.UI.Services.Theme
         
         [Header("Block Lines color")] 
         public Color BlockLinesColor;
+        public Color SelectorBlockLinesColor;
+
+        [Header("Inputs")] 
+        public Color InputTextColor;
+        public Color InputLeftTextColor;
+        public Color InputBackgroundColor;
+        [Space]
+        public Color EnableHintTextColor;
+        public Color EnableHintBackgroundColor;
+        public Color DisableHintTextColor;
+        public Color DisableHintBackgroundColor;
     }
 }
