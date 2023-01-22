@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using CodeBase.Data;
+using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
 
 namespace CodeBase.UI.SudokuGame
 {
-    public class UIGameBoard : MonoBehaviour, IUIInputListener
+    public class UIGameBoard : MonoBehaviour, IUIInputListener, ISavedProgress
     {
         private const int Size = 9;
 
@@ -16,8 +19,12 @@ namespace CodeBase.UI.SudokuGame
         private UICellNumber _selectedCell;
         private IUIInput _input;
 
+        private ISaveLoadService _saveLoad;
+
         public void Init(List<int> parseData, IUIInput input)
         {
+            _saveLoad = AllServices.Container.Single<ISaveLoadService>();
+
             _input = input;
 
             SetLevelNumber(parseData);
@@ -27,8 +34,6 @@ namespace CodeBase.UI.SudokuGame
 
             RefreshBoard();
             RefreshLeftCountNumber();
-
-            //AutoSetHints();
         }
 
         public void InputNumber(int number)
@@ -40,8 +45,9 @@ namespace CodeBase.UI.SudokuGame
             CheckError();
             RefreshLeftCountNumber();
             CheckEndGame();
-
+            
             RefreshUserInputHints();
+            SaveGame();
         }
 
         public void InputHint(int number)
@@ -54,6 +60,7 @@ namespace CodeBase.UI.SudokuGame
                     ShowDeniesForHints(number);
 
                 RefreshInputHints();
+                SaveGame();
             }
 
             RefreshBoard();
@@ -76,11 +83,18 @@ namespace CodeBase.UI.SudokuGame
             ShowAllTheSameNumber();
             CheckError();
             RefreshLeftCountNumber();
+            
+            SaveGame();
         }
 
         public void RefreshInputHints()
         {
             _input.HintsInCell(_selectedCell.GetHints());
+        }
+
+        public void AutoHints()
+        {
+            AutoSetHints();
         }
 
         private void OnClickCell(UICellNumber cellNumber)
@@ -269,7 +283,7 @@ namespace CodeBase.UI.SudokuGame
 
         private void RefreshLeftCountNumber()
         {
-            for (int number = 1; number < Size; number++)
+            for (int number = 1; number <= Size; number++)
                 _input.RefreshLeftNumber(number, CalculateLeftNumber(number));
         }
 
@@ -324,6 +338,103 @@ namespace CodeBase.UI.SudokuGame
                 List<int> possibleNumbers = GetPossiblyHints(uiCellNumber);
                 List<int> result = list.FindAll(x => possibleNumbers.Contains(x));
                 uiCellNumber.SetHints(result);
+            }
+        }
+
+        private void SaveGame()
+        {
+            _saveLoad.SaveProgress();
+        }
+
+        public void LoadProgress(PlayerProgress playerProgress)
+        {
+        }
+
+        public void UpdateProgress(PlayerProgress playerProgress)
+        {
+            SaveBoard(playerProgress);
+        }
+
+        private void SaveBoard(PlayerProgress playerProgress)
+        {
+            SaveUserNumbers(playerProgress);
+            SaveUserHints(playerProgress);
+        }
+
+        private void SaveUserNumbers(PlayerProgress playerProgress)
+        {
+            List<int> numbers = new List<int>();
+            foreach (UIBlockCells uiBlockCells in _uiBlockCells)
+            {
+                foreach (UICellNumber uiCellNumber in uiBlockCells.UICellNumbers)
+                {
+                    if (uiCellNumber.LevelNumber)
+                        numbers.Add(0);
+                    else
+                        numbers.Add(uiCellNumber.Number);
+                }
+            }
+
+            playerProgress.LastGameData.UserNumbers = numbers;
+        }
+
+        private void SaveUserHints(PlayerProgress playerProgress)
+        {
+            List<HintsData> hints = new List<HintsData>();
+            foreach (UIBlockCells uiBlockCells in _uiBlockCells)
+            {
+                foreach (UICellNumber uiCellNumber in uiBlockCells.UICellNumbers)
+                {
+                    HintsData hintsData = new HintsData();
+                    hintsData.Hints = uiCellNumber.GetHints();
+                    hints.Add(hintsData);
+                }
+            }
+
+            playerProgress.LastGameData.Hints = hints;
+        }
+
+        public void LoadUserData(LastGameData progressLastGameData)
+        {
+            LoadUserNumbers(progressLastGameData.UserNumbers);
+            LoadUserHints(progressLastGameData.Hints);
+            
+            RefreshBoard();
+            ShowAllTheSameNumber();
+            CheckError();
+            RefreshLeftCountNumber();
+            CheckEndGame();
+        }
+
+        private void LoadUserNumbers(List<int> parseData)
+        {
+            int index = 0;
+            int count = Size;
+
+            for (int i = 0; i < _uiBlockCells.Count; i++)
+            {
+                List<int> number = parseData.GetRange(index, count);
+                _uiBlockCells[i].SetUserNumbers(number);
+                index += count;
+            }
+        }
+
+        private void LoadUserHints(List<HintsData> parseData)
+        {
+            int index = 0;
+            int count = Size;
+
+            for (int i = 0; i < _uiBlockCells.Count; i++)
+            {
+                List<List<int>> hints = new List<List<int>>();
+
+                for (int j = index; j < index + Size; j++)
+                {
+                    hints.Add(parseData[j].Hints);
+                }
+
+                _uiBlockCells[i].SetUserHints(hints);
+                index += count;
             }
         }
     }

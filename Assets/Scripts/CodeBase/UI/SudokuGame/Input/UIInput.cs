@@ -26,7 +26,9 @@ namespace CodeBase.UI.SudokuGame.Input
 
         public void RefreshLeftNumber(int number, int count)
         {
-            _uiButtonNumbers.Find(x => x.Number == number).RefreshLeftNumber(count);
+            UIButtonNumber tmp = _uiButtonNumbers.Find(x => x.Number == number);
+            tmp.RefreshLeftNumber(count);
+            tmp.gameObject.SetActive(count != 0);
         }
 
         public void HintsInCell(List<int> numbers)
@@ -86,6 +88,7 @@ namespace CodeBase.UI.SudokuGame.Input
 
         private void OnClickAutoHint()
         {
+            _inputListener.AutoHints();
         }
 
         private void Subscrible()

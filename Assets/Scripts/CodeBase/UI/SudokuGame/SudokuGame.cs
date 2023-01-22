@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using CodeBase.Data;
+using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Menu;
 using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
 
 namespace CodeBase.UI.SudokuGame
 {
-    public class SudokuGame : MonoBehaviour
+    public class SudokuGame : MonoBehaviour, ISavedProgress
     {
         private const string Path = "Levels/Level";
 
@@ -16,28 +17,36 @@ namespace CodeBase.UI.SudokuGame
         private LevelMenuData _progressLevelMenuData;
         private LastGameData _progressLastGameData;
 
+        private DifficultyGame _difficultyGame;
+        private int _indexLevel;
+
         public void InitNewGame(LevelMenuData progressLevelMenuData)
         {
             _progressLevelMenuData = progressLevelMenuData;
+
+            _difficultyGame = _progressLevelMenuData.DifficultyGame;
+            _indexLevel = _progressLevelMenuData.LastSelectLevel;
         }
 
         public void InitContinueGame(LastGameData progressLastGameData)
         {
             _progressLastGameData = progressLastGameData;
+            
+            _difficultyGame = _progressLastGameData.DifficultyGame;
+            _indexLevel = _progressLastGameData.IndexLevel;
         }
 
         public void NewGame()
         {
-            string data = LoadLevel(_progressLevelMenuData.DifficultyGame, _progressLevelMenuData.LastSelectLevel);
+            string data = LoadLevel(_difficultyGame, _indexLevel);
             _uiInput.Init(_uiGameBoard);
             _uiGameBoard.Init(ParseLevel(data), _uiInput);
         }
 
         public void ContinueGame()
         {
-            string data = LoadLevel(_progressLastGameData.DifficultyGame, _progressLastGameData.IndexLevel);
-            _uiInput.Init(_uiGameBoard);
-            _uiGameBoard.Init(ParseLevel(data), _uiInput);
+            NewGame();
+            _uiGameBoard.LoadUserData(_progressLastGameData);
         }
 
         private string LoadLevel(DifficultyGame difficultyGame, int index)
@@ -54,6 +63,16 @@ namespace CodeBase.UI.SudokuGame
                 result.Add(int.Parse(level[i].ToString()));
 
             return result;
+        }
+
+        public void LoadProgress(PlayerProgress playerProgress)
+        {
+        }
+
+        public void UpdateProgress(PlayerProgress playerProgress)
+        {
+            playerProgress.LastGameData.DifficultyGame = _difficultyGame;
+            playerProgress.LastGameData.IndexLevel = _indexLevel;
         }
     }
 }

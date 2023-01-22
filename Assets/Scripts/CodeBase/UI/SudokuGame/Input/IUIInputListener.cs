@@ -6,5 +6,6 @@ namespace CodeBase.UI.SudokuGame.Input
         void InputHint(int number);
         void ClickClear();
         void RefreshInputHints();
+        void AutoHints();
     }
 }

@@ -57,5 +57,19 @@ namespace CodeBase.UI.SudokuGame
         {
             _lines.ForEach(x => x.color = _themeConfigs.BlockLinesColor);
         }
+
+        public void SetUserNumbers(List<int> number)
+        {
+            for (var i = 0; i < _uiCellNumbers.Count; i++)
+                if (number[i] != 0)
+                    _uiCellNumbers[i].SetUserNumber(number[i]);
+        }
+
+        public void SetUserHints(List<List<int>> hints)
+        {
+            for (var i = 0; i < _uiCellNumbers.Count; i++)
+                if (hints[i].Count != 0)
+                    _uiCellNumbers[i].SetHints(hints[i]);
+        }
     }
 }
