@@ -41,8 +41,9 @@ namespace CodeBase.UI.Menu
         public void Refresh()
         {
             _text.text = Index.ToString();
-        
-        
+
+            if (_completed)
+                _text.color = Color.green;
         }
     }
 }

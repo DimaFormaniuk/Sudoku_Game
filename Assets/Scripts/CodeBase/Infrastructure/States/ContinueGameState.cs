@@ -9,8 +9,8 @@ namespace CodeBase.Infrastructure.States
     {
         private readonly GameStateMachine _gameStateMachine;
         private readonly IUIFactory _uiFactory;
-        private ISaveLoadService _saveLoadService;
-        private IThemeService _themeService;
+        private readonly ISaveLoadService _saveLoadService;
+        private readonly IThemeService _themeService;
 
         public ContinueGameState(GameStateMachine gameStateMachine, IUIFactory uiFactory, ISaveLoadService saveLoadService, IThemeService themeService)
         {

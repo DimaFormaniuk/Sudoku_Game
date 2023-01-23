@@ -58,7 +58,7 @@ namespace CodeBase.UI.Menu
 
         private void RefreshSelector(Transform transform)
         {
-            _selector.transform.SetParent(transform,false);
+            _selector.transform.SetParent(transform, false);
             _selector.transform.SetAsFirstSibling();
         }
 
@@ -75,7 +75,7 @@ namespace CodeBase.UI.Menu
             for (int i = 0; i < Constants.LevelCount; i++)
             {
                 int index = i + 1;
-                bool data = playerProgress.LevelDatas.GetData(index, _uiSelectLevelDifficulty.DifficultyGame);
+                bool data = playerProgress.LevelDatas.GetData(_uiSelectLevelDifficulty.DifficultyGame, index);
                 UICellButton cell = Instantiate(_prefabCell, this.transform);
                 cell.Init(index, data);
                 _uiCellButtons.Add(cell);

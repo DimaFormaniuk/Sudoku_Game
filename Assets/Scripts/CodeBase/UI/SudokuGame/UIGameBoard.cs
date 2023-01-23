@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.Infrastructure.States;
 using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
 
@@ -20,11 +21,13 @@ namespace CodeBase.UI.SudokuGame
         private IUIInput _input;
 
         private ISaveLoadService _saveLoad;
+        private IGameStateMachine _stateMachine;
 
         public void Init(List<int> parseData, IUIInput input)
         {
             _saveLoad = AllServices.Container.Single<ISaveLoadService>();
-
+            _stateMachine = AllServices.Container.Single<IGameStateMachine>();
+            
             _input = input;
 
             SetLevelNumber(parseData);
@@ -278,6 +281,10 @@ namespace CodeBase.UI.SudokuGame
             if (_boardList.FindAll(x => x.CorrectNumber == false).Count == 0)
             {
                 Debug.LogError("Win game");
+                
+                SaveGame();
+                
+                _stateMachine.Enter<EndGameState>();
             }
         }
 

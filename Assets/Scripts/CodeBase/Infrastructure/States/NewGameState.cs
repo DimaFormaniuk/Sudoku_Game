@@ -7,10 +7,10 @@ namespace CodeBase.Infrastructure.States
 {
     public class NewGameState : IState
     {
-        private GameStateMachine _gameStateMachine;
-        private IUIFactory _uiFactory;
-        private ISaveLoadService _saveLoadService;
-        private IThemeService _themeService;
+        private readonly GameStateMachine _gameStateMachine;
+        private readonly IUIFactory _uiFactory;
+        private readonly ISaveLoadService _saveLoadService;
+        private readonly IThemeService _themeService;
 
         public NewGameState(GameStateMachine gameStateMachine, IUIFactory uiFactory, ISaveLoadService saveLoadService, IThemeService themeService)
         {

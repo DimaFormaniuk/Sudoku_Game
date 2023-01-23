@@ -14,12 +14,25 @@ namespace CodeBase.Data
             CompletedLevel = new Dictionary<DifficultyGame, List<int>>();
         }
 
-        public bool GetData(int index, DifficultyGame difficultyGame)
+        public bool GetData(DifficultyGame difficultyGame, int index)
         {
             if (CompletedLevel.ContainsKey(difficultyGame))
                 return CompletedLevel[difficultyGame].Contains(index);
 
             return false;
+        }
+
+        public void AddCompleteLevel(DifficultyGame difficultyGame, int index)
+        {
+            if (CompletedLevel.ContainsKey(difficultyGame))
+                CompletedLevel[difficultyGame].Add(index);
+            else
+                CompletedLevel.Add(difficultyGame, new List<int> { index });
+        }
+
+        public void CompleteLastGame(LastGameData progressLastGameData)
+        {
+            AddCompleteLevel(progressLastGameData.DifficultyGame, progressLastGameData.IndexLevel);
         }
     }
 }
