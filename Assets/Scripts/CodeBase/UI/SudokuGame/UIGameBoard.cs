@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.SaveLoad;
-using CodeBase.Infrastructure.States;
 using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
 
@@ -10,347 +9,101 @@ namespace CodeBase.UI.SudokuGame
 {
     public class UIGameBoard : MonoBehaviour, IUIInputListener, ISavedProgress
     {
-        private const int Size = 9;
-
         [SerializeField] private List<UIBlockCells> _uiBlockCells;
 
-        private UICellNumber[,] _boardArray;
-        private List<UICellNumber> _boardList;
+        private ISaveLoadService _saveLoad;
 
-        private UICellNumber _selectedCell;
         private IUIInput _input;
 
-        private ISaveLoadService _saveLoad;
-        private IGameStateMachine _stateMachine;
+        private IBoardData _boardData;
+        private ICrossCells _crossCells;
+        private ICheckerError _checkerError;
+        private ICheckerEndGame _checkerEndGame;
+        private ISaveBoard _saveBoard;
+        private ILoadBoard _loadBoard;
+        private IRefresherBoardNumbers _refresherBoardNumbers;
+        private IRefresherBoardHints _refresherBoardHints;
 
         public void Init(List<int> parseData, IUIInput input)
         {
             _saveLoad = AllServices.Container.Single<ISaveLoadService>();
-            _stateMachine = AllServices.Container.Single<IGameStateMachine>();
-            
+
             _input = input;
 
-            SetLevelNumber(parseData);
-            InitBoard();
+            _boardData = new BoardData(_uiBlockCells);
+            _boardData.SetLevelNumber(parseData);
+            _boardData.InitBoard();
+
+            _crossCells = new CrossCells(_boardData);
+            _checkerError = new CheckerError(_boardData, _crossCells);
+            _checkerEndGame = new CheckerEndGame(_boardData, SaveGame);
+
+            _saveBoard = new SaveBoard(_boardData);
+            _loadBoard = new LoadBoard(_boardData);
+
+            _refresherBoardNumbers = new RefresherBoardNumbers(_boardData);
+            _refresherBoardHints = new RefresherBoardHints(_boardData, _crossCells);
+
             Subscrible();
-            _selectedCell = FindFirsEmptyCell();
 
-            RefreshBoard();
+            _refresherBoardNumbers.RefreshBoard();
             RefreshLeftCountNumber();
-        }
-
-        public void InputNumber(int number)
-        {
-            _selectedCell.SetUserNumber(number);
-
-            RefreshBoard();
-            ShowAllTheSameNumber();
-            CheckError();
-            RefreshLeftCountNumber();
-            CheckEndGame();
-            
-            RefreshUserInputHints();
-            SaveGame();
-        }
-
-        public void InputHint(int number)
-        {
-            if (CanInputHint())
-            {
-                if (CheckPossibleHint(number))
-                    _selectedCell.SetUserHint(number);
-                else
-                    ShowDeniesForHints(number);
-
-                RefreshInputHints();
-                SaveGame();
-            }
-
-            RefreshBoard();
-            ShowAllTheSameNumber();
-            CheckError();
-            RefreshLeftCountNumber();
-        }
-
-        private bool CanInputHint()
-        {
-            return _selectedCell.Number == 0;
-        }
-
-        public void ClickClear()
-        {
-            _selectedCell.ClearNumber();
-            _selectedCell.ClearHints();
-
-            RefreshBoard();
-            ShowAllTheSameNumber();
-            CheckError();
-            RefreshLeftCountNumber();
-            
-            SaveGame();
-        }
-
-        public void RefreshInputHints()
-        {
-            _input.HintsInCell(_selectedCell.GetHints());
-        }
-
-        public void AutoHints()
-        {
-            AutoSetHints();
-        }
-
-        private void OnClickCell(UICellNumber cellNumber)
-        {
-            _selectedCell = cellNumber;
-
-            CheckErrorSelectCell();
-            RefreshBoard();
-            ShowAllTheSameNumber();
-            RefreshInputHints();
-        }
-
-        private UICellNumber FindFirsEmptyCell()
-        {
-            return _boardList.Find(x => x.Number == 0);
         }
 
         private void OnDestroy()
         {
             Unsubscrible();
         }
-
-        private void InitBoard()
+        
+        public void InputNumber(int number)
         {
-            _boardArray = new UICellNumber[Size, Size];
-            _boardList = new List<UICellNumber>();
+            _refresherBoardNumbers.InputNumber(number);
+            _refresherBoardHints.RefreshUserInputHints();
+            _checkerError.CheckError();
+            _checkerEndGame.CheckEndGame();
+            
+            RefreshLeftCountNumber();
+            SaveGame();
+        }
 
-            for (int i = 0; i < Size; i++)
+        public void InputHint(int number)
+        {
+            if (_refresherBoardHints.CanInputHint())
             {
-                for (int j = 0; j < Size; j++)
-                {
-                    var vector2 = _uiBlockCells[i].UICellNumbers[j].IndexCellVector;
-                    _boardArray[vector2.x, vector2.y] = _uiBlockCells[i].UICellNumbers[j];
-                    _boardList.Add(_uiBlockCells[i].UICellNumbers[j]);
-                }
-            }
-        }
+                _refresherBoardHints.InputHint(number);
 
-        private void SetLevelNumber(List<int> parseData)
-        {
-            int index = 0;
-            int count = Size;
-
-            for (int i = 0; i < _uiBlockCells.Count; i++)
-            {
-                List<int> number = parseData.GetRange(index, count);
-                _uiBlockCells[i].Init(number, i + 1);
-                index += count;
-            }
-        }
-
-        private void Subscrible()
-        {
-            _boardList.ForEach(x => x.ClickCell += OnClickCell);
-        }
-
-        private void Unsubscrible()
-        {
-            _boardList.ForEach(x => x.ClickCell -= OnClickCell);
-        }
-
-        private void CheckError()
-        {
-            CheckErrorNotSelectCell();
-            CheckErrorSelectCell();
-        }
-
-        private void RefreshBoard()
-        {
-            RefreshAllCells();
-            RefreshBlockColor();
-            RefreshLinesColor();
-            RefreshCellSelectorColor();
-        }
-
-        private void RefreshAllCells()
-        {
-            _boardList.ForEach(x => x.Unselect());
-        }
-
-        private void RefreshBlockColor()
-        {
-            _uiBlockCells.Find(x => x.IndexBlock == _selectedCell.IndexBlock).SelectorInBlock();
-        }
-
-        private void RefreshLinesColor()
-        {
-            int x = _selectedCell.IndexCellVector.x;
-            int y = _selectedCell.IndexCellVector.y;
-
-            for (int i = 0; i < Size; i++)
-            {
-                _boardArray[x, i].SelectorLine();
-                _boardArray[i, y].SelectorLine();
-            }
-        }
-
-        private void RefreshCellSelectorColor()
-        {
-            _selectedCell.Select();
-        }
-
-        private void ShowAllTheSameNumber()
-        {
-            if (_selectedCell.Number == 0)
-                return;
-
-            foreach (var uiCellNumber in _boardList)
-            {
-                if (uiCellNumber.Number == _selectedCell.Number)
-                    uiCellNumber.Select();
-            }
-        }
-
-        private void CheckErrorSelectCell()
-        {
-            List<UICellNumber> cells = GetCrossCells(_selectedCell);
-            cells.ForEach(x =>
-            {
-                if (x.Number != 0 && x.Number == _selectedCell.Number)
-                    x.DeniesNumber();
-            });
-        }
-
-        private void CheckErrorNotSelectCell()
-        {
-            foreach (var cellNumber in _boardList)
-            {
-                bool correctNumber = true;
-                if (cellNumber.LevelNumber == false && cellNumber.Number != 0)
-                {
-                    List<UICellNumber> numbers = GetCrossCells(cellNumber);
-
-                    foreach (var number in numbers)
-                    {
-                        if (cellNumber.Number == number.Number && number.LevelNumber)
-                        {
-                            cellNumber.Error();
-                            correctNumber = false;
-                        }
-                    }
-
-                    if (correctNumber)
-                        cellNumber.CellCorrectNumber();
-                }
-            }
-        }
-
-        private List<UICellNumber> GetCrossCells(UICellNumber x)
-        {
-            List<UICellNumber> numbers = new List<UICellNumber>();
-            numbers.AddRange(GetBlockNumbers(x));
-            numbers.AddRange(GetLinesNumbers(x));
-            return numbers;
-        }
-
-        private List<UICellNumber> GetLinesNumbers(UICellNumber uiCellNumber)
-        {
-            List<UICellNumber> result = new List<UICellNumber>();
-
-            int x = uiCellNumber.IndexCellVector.x;
-            int y = uiCellNumber.IndexCellVector.y;
-
-            for (int i = 0; i < Size; i++)
-            {
-                if (_boardArray[x, i].IndexBlock != uiCellNumber.IndexBlock)
-                    result.Add(_boardArray[x, i]);
-                if (_boardArray[i, y].IndexBlock != uiCellNumber.IndexBlock)
-                    result.Add(_boardArray[i, y]);
-            }
-
-            return result;
-        }
-
-        private List<UICellNumber> GetBlockNumbers(UICellNumber uiCellNumber) =>
-            _boardList.FindAll(x => x.IndexBlock == uiCellNumber.IndexBlock
-                                    && x.IndexCell != uiCellNumber.IndexCell);
-
-        private void CheckEndGame()
-        {
-            if (_boardList.FindAll(x => x.CorrectNumber == false).Count == 0)
-            {
-                Debug.LogError("Win game");
-                
+                RefreshInputHints();
                 SaveGame();
-                
-                _stateMachine.Enter<EndGameState>();
             }
+
+            _refresherBoardNumbers.RefreshBoard();
+            _refresherBoardNumbers.ShowAllTheSameNumber();
+            _checkerError.CheckError();
+
+            RefreshLeftCountNumber();
         }
 
-        private void RefreshLeftCountNumber()
+        public void ClickClear()
         {
-            for (int number = 1; number <= Size; number++)
-                _input.RefreshLeftNumber(number, CalculateLeftNumber(number));
+            _boardData.SelectedCell.ClearNumber();
+            _boardData.SelectedCell.ClearHints();
+
+            _refresherBoardNumbers.RefreshBoard();
+            _refresherBoardNumbers.ShowAllTheSameNumber();
+            _checkerError.CheckError();
+
+            RefreshLeftCountNumber();
+            SaveGame();
         }
 
-        private int CalculateLeftNumber(int number) =>
-            Size - _boardList.FindAll(x => x.Number == number && (x.LevelNumber || x.CorrectNumber)).Count;
-
-        public void AutoSetHints()
+        public void RefreshInputHints()
         {
-            foreach (var cellNumber in _boardList)
-            {
-                if (cellNumber.LevelNumber == false && cellNumber.Number == 0)
-                {
-                    var hints = GetPossiblyHints(cellNumber);
-
-                    cellNumber.SetHints(hints);
-                }
-            }
+            _input.HintsInCell(_boardData.SelectedCell.GetHints());
         }
 
-        private List<int> GetPossiblyHints(UICellNumber cellNumber)
+        public void AutoHints()
         {
-            List<int> hints = new List<int>();
-            for (int i = 1; i <= Size; i++)
-                hints.Add(i);
-
-            List<UICellNumber> numbers = GetCrossCells(cellNumber);
-            foreach (var uiCellNumber in numbers)
-                if (uiCellNumber.Number != 0 && (uiCellNumber.CorrectNumber || uiCellNumber.LevelNumber))
-                    if (hints.Contains(uiCellNumber.Number))
-                        hints.Remove(uiCellNumber.Number);
-
-            return hints;
-        }
-
-        private void ShowDeniesForHints(int number)
-        {
-            foreach (UICellNumber uiCellNumber in GetCrossCells(_selectedCell))
-                if (uiCellNumber.Number == number)
-                    uiCellNumber.ShowDeniesForHints();
-        }
-
-        private bool CheckPossibleHint(int number)
-        {
-            return GetPossiblyHints(_selectedCell).Contains(number);
-        }
-
-        private void RefreshUserInputHints()
-        {
-            foreach (UICellNumber uiCellNumber in _boardList)
-            {
-                List<int> list = uiCellNumber.GetHints();
-                List<int> possibleNumbers = GetPossiblyHints(uiCellNumber);
-                List<int> result = list.FindAll(x => possibleNumbers.Contains(x));
-                uiCellNumber.SetHints(result);
-            }
-        }
-
-        private void SaveGame()
-        {
-            _saveLoad.SaveProgress();
+            _refresherBoardHints.AutoSetHints();
         }
 
         public void LoadProgress(PlayerProgress playerProgress)
@@ -359,90 +112,54 @@ namespace CodeBase.UI.SudokuGame
 
         public void UpdateProgress(PlayerProgress playerProgress)
         {
-            SaveBoard(playerProgress);
-        }
-
-        private void SaveBoard(PlayerProgress playerProgress)
-        {
-            SaveUserNumbers(playerProgress);
-            SaveUserHints(playerProgress);
-        }
-
-        private void SaveUserNumbers(PlayerProgress playerProgress)
-        {
-            List<int> numbers = new List<int>();
-            foreach (UIBlockCells uiBlockCells in _uiBlockCells)
-            {
-                foreach (UICellNumber uiCellNumber in uiBlockCells.UICellNumbers)
-                {
-                    if (uiCellNumber.LevelNumber)
-                        numbers.Add(0);
-                    else
-                        numbers.Add(uiCellNumber.Number);
-                }
-            }
-
-            playerProgress.LastGameData.UserNumbers = numbers;
-        }
-
-        private void SaveUserHints(PlayerProgress playerProgress)
-        {
-            List<HintsData> hints = new List<HintsData>();
-            foreach (UIBlockCells uiBlockCells in _uiBlockCells)
-            {
-                foreach (UICellNumber uiCellNumber in uiBlockCells.UICellNumbers)
-                {
-                    HintsData hintsData = new HintsData();
-                    hintsData.Hints = uiCellNumber.GetHints();
-                    hints.Add(hintsData);
-                }
-            }
-
-            playerProgress.LastGameData.Hints = hints;
+            _saveBoard.Save(playerProgress);
         }
 
         public void LoadUserData(LastGameData progressLastGameData)
         {
-            LoadUserNumbers(progressLastGameData.UserNumbers);
-            LoadUserHints(progressLastGameData.Hints);
-            
-            RefreshBoard();
-            ShowAllTheSameNumber();
-            CheckError();
+            _loadBoard.LoadUserData(progressLastGameData);
+
+            _refresherBoardNumbers.RefreshBoard();
+            _refresherBoardNumbers.ShowAllTheSameNumber();
+            _checkerError.CheckError();
+
             RefreshLeftCountNumber();
-            CheckEndGame();
         }
 
-        private void LoadUserNumbers(List<int> parseData)
+        private void OnClickCell(UICellNumber cellNumber)
         {
-            int index = 0;
-            int count = Size;
+            _boardData.SetSelectedCell(cellNumber);
 
-            for (int i = 0; i < _uiBlockCells.Count; i++)
-            {
-                List<int> number = parseData.GetRange(index, count);
-                _uiBlockCells[i].SetUserNumbers(number);
-                index += count;
-            }
+            _checkerError.CheckError();
+            _refresherBoardNumbers.RefreshBoard();
+            _refresherBoardNumbers.ShowAllTheSameNumber();
+
+            RefreshInputHints();
         }
 
-        private void LoadUserHints(List<HintsData> parseData)
+        private void Subscrible()
         {
-            int index = 0;
-            int count = Size;
-
-            for (int i = 0; i < _uiBlockCells.Count; i++)
-            {
-                List<List<int>> hints = new List<List<int>>();
-
-                for (int j = index; j < index + Size; j++)
-                {
-                    hints.Add(parseData[j].Hints);
-                }
-
-                _uiBlockCells[i].SetUserHints(hints);
-                index += count;
-            }
+            _boardData.BoardList.ForEach(x => x.ClickCell += OnClickCell);
         }
+
+        private void Unsubscrible()
+        {
+            _boardData.BoardList.ForEach(x => x.ClickCell -= OnClickCell);
+        }
+
+        private void SaveGame()
+        {
+            _saveLoad.SaveProgress();
+        }
+
+        private void RefreshLeftCountNumber()
+        {
+            for (int number = 1; number <= _boardData.Size; number++)
+                _input.RefreshLeftNumber(number, CalculateLeftNumber(number));
+        }
+
+        private int CalculateLeftNumber(int number) =>
+            _boardData.Size - _boardData.BoardList
+                .FindAll(x => x.Number == number && (x.LevelNumber || x.CorrectNumber)).Count;
     }
 }
