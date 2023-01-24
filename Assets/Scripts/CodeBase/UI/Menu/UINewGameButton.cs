@@ -1,4 +1,5 @@
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Ads;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.Infrastructure.States;
 using TMPro;
@@ -17,11 +18,15 @@ namespace CodeBase.UI.Menu
 
         private ISaveLoadService _saveLoad;
         private IGameStateMachine _stateMachine;
+        private IAdsService _adsService;
 
         private void Awake()
         {
-            _saveLoad = AllServices.Container.Single<ISaveLoadService>();
-            _stateMachine = AllServices.Container.Single<IGameStateMachine>();
+            AllServices services = AllServices.Container;
+
+            _saveLoad = services.Single<ISaveLoadService>();
+            _stateMachine = services.Single<IGameStateMachine>();
+            _adsService = services.Single<IAdsService>();
         }
 
         public void RefreshUI(DifficultyGame difficultyGame, int index)
@@ -50,6 +55,10 @@ namespace CodeBase.UI.Menu
         private void OnClickNewGame()
         {
             _saveLoad.SaveProgress();
+
+            if (_adsService.HasLoadedInterstitial())
+                _adsService.ShowInterstitial();
+
             _stateMachine.Enter<NewGameState>();
         }
     }

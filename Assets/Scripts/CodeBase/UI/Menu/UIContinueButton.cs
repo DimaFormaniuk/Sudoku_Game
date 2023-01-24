@@ -1,4 +1,5 @@
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Ads;
 using CodeBase.Infrastructure.States;
 using TMPro;
 using UnityEngine;
@@ -15,10 +16,14 @@ namespace CodeBase.UI.Menu
         private int _indexLevel;
 
         private IGameStateMachine _stateMachine;
-    
+        private IAdsService _adsService;
+
         private void Awake()
         {
-            _stateMachine = AllServices.Container.Single<IGameStateMachine>();
+            AllServices services = AllServices.Container;
+            
+            _stateMachine = services.Single<IGameStateMachine>();
+            _adsService = services.Single<IAdsService>();
         }
 
         public void RefreshUI(DifficultyGame difficultyGame, int index)
@@ -46,6 +51,9 @@ namespace CodeBase.UI.Menu
 
         private void OnClickContinueGame()
         {
+            if (_adsService.HasLoadedInterstitial())
+                _adsService.ShowInterstitial();
+            
             _stateMachine.Enter<ContinueGameState>();
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Ads;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
@@ -11,7 +12,8 @@ namespace CodeBase.UI.SudokuGame
     {
         [SerializeField] private List<UIBlockCells> _uiBlockCells;
 
-        private ISaveLoadService _saveLoad;
+        private ISaveLoadService _saveLoadService;
+        private IAdsService _adsService;
 
         private IUIInput _input;
 
@@ -26,7 +28,10 @@ namespace CodeBase.UI.SudokuGame
 
         public void Init(List<int> parseData, IUIInput input)
         {
-            _saveLoad = AllServices.Container.Single<ISaveLoadService>();
+            AllServices services = AllServices.Container;
+
+            _saveLoadService = services.Single<ISaveLoadService>();
+            _adsService = services.Single<IAdsService>();
 
             _input = input;
 
@@ -54,14 +59,14 @@ namespace CodeBase.UI.SudokuGame
         {
             Unsubscrible();
         }
-        
+
         public void InputNumber(int number)
         {
             _refresherBoardNumbers.InputNumber(number);
             _refresherBoardHints.RefreshUserInputHints();
             _checkerError.CheckError();
             _checkerEndGame.CheckEndGame();
-            
+
             RefreshLeftCountNumber();
             SaveGame();
         }
@@ -103,7 +108,14 @@ namespace CodeBase.UI.SudokuGame
 
         public void AutoHints()
         {
-            _refresherBoardHints.AutoSetHints();
+            if (_adsService.HasLoadedRewarded())
+            {
+                _adsService.ShowRewarded(result =>
+                {
+                    if (result == AdsResultType.Completed)
+                        _refresherBoardHints.AutoSetHints();
+                });
+            }
         }
 
         public void LoadProgress(PlayerProgress playerProgress)
@@ -149,7 +161,7 @@ namespace CodeBase.UI.SudokuGame
 
         private void SaveGame()
         {
-            _saveLoad.SaveProgress();
+            _saveLoadService.SaveProgress();
         }
 
         private void RefreshLeftCountNumber()

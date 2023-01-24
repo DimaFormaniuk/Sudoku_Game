@@ -1,14 +1,16 @@
 using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.Ads;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Services.Factory;
 using CodeBase.UI.Services.Theme;
+using Unity.VisualScripting;
 
 namespace CodeBase.Infrastructure.States
 {
     public class LateRegistrationState : IState
     {
+        private readonly GameStateMachine _stateMachine;
         private readonly AllServices _services;
-        private GameStateMachine _stateMachine;
 
         public LateRegistrationState(GameStateMachine stateMachine, AllServices services)
         {
@@ -29,10 +31,12 @@ namespace CodeBase.Infrastructure.States
 
         private void LateRegistration()
         {
-            SubscribleToFactory();
+            SubscribeToFactory();
+
+            _services.Single<IAdsService>().Init();
         }
 
-        private void SubscribleToFactory()
+        private void SubscribeToFactory()
         {
             _services.Single<IUIFactory>().Registered(_services.Single<ISaveLoadService>());
             _services.Single<IUIFactory>().Registered(_services.Single<IThemeService>());
