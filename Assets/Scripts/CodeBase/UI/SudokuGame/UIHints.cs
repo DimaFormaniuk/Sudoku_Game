@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using CodeBase.UI.Services.Theme;
 using UnityEngine;
 
 namespace CodeBase.UI.SudokuGame
 {
-    public class UIHints : MonoBehaviour
+    public class UIHints : MonoBehaviour, IThemeReader
     {
         [SerializeField] private List<UIHint> _hints;
 
@@ -55,6 +56,12 @@ namespace CodeBase.UI.SudokuGame
         public List<int> GetHints()
         {
             return _showedHints;
+        }
+
+        public void UpdateTheme(ThemeConfigData themeConfigData)
+        {
+            foreach (var uiHint in _hints)
+                uiHint.RefreshColor(themeConfigData.HintColor);
         }
     }
 }

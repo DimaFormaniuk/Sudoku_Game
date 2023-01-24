@@ -1533,6 +1533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4753457136214113939}
+  - component: {fileID: 9148684399429867071}
   m_Layer: 5
   m_Name: TopPanel
   m_TagString: Untagged
@@ -1563,6 +1564,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 250}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &9148684399429867071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4753457136214113948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53ef31c84d4478cab31ded981a4f4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _themeButton: {fileID: 4284258656444008037}
+  _pauseButton: {fileID: 1083520593374209703}
+  _closeButton: {fileID: 2445118971369241936}
+  _difficultyText: {fileID: 8275341450173604436}
+  _uiThemePanel: {fileID: 5265406438700643411}
+  _uiTimer: {fileID: 2575127624447950436}
+  _uiPausePanel: {fileID: 0}
 --- !u!1 &4753457136667796636
 GameObject:
   m_ObjectHideFlags: 0
@@ -1619,11 +1639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _uiGameBoard: {fileID: 2546642797610577077}
   _uiInput: {fileID: 7426198994084537495}
-  _uiThemePanel: {fileID: 5265406438700643411}
-  _themeButton: {fileID: 4284258656444008037}
-  _pauseButton: {fileID: 1083520593374209703}
-  _uiTimer: {fileID: 2575127624447950436}
-  _difficultyText: {fileID: 8275341450173604436}
+  _uiTopPanel: {fileID: 9148684399429867071}
 --- !u!1 &4753457136933343027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1807,6 +1823,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2938d439ed39db44acaf17f6bc02e30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _backgroundGame: {fileID: 3070046019439152639}
+  _background: {fileID: 109859252381408600}
   _uiBlockCells:
   - {fileID: 5560411741116041535}
   - {fileID: 5560411742026867520}
@@ -2149,7 +2167,7 @@ GameObject:
   - component: {fileID: 3070046019439152639}
   - component: {fileID: 5129699755853515823}
   m_Layer: 5
-  m_Name: Background
+  m_Name: BackgroundGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

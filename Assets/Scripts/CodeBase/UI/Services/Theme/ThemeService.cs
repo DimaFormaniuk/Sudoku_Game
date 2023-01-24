@@ -11,7 +11,7 @@ namespace CodeBase.UI.Services.Theme
         public List<IThemeReader> ThemeReaders { get; private set; } = new List<IThemeReader>();
         public List<ThemeConfigData> ListThemeConfigs => _themeConfigs;
 
-        private IStaticDataService _staticDataService;
+        private readonly IStaticDataService _staticDataService;
 
         private List<ThemeConfigData> _themeConfigs;
         private int _index = 0;
@@ -51,11 +51,13 @@ namespace CodeBase.UI.Services.Theme
         public void LoadProgress(PlayerProgress playerProgress)
         {
             _index = playerProgress.ThemeData.IndexTheme;
+            Debug.LogError($"load {playerProgress.ThemeData.IndexTheme}");
         }
 
         public void UpdateProgress(PlayerProgress playerProgress)
         {
             playerProgress.ThemeData.IndexTheme = _index;
+            Debug.LogError($"update {playerProgress.ThemeData.IndexTheme}");
         }
     }
 }

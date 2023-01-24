@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Menu;
 using CodeBase.UI.SudokuGame.Input;
-using CodeBase.UI.SudokuGame.ThemePanel;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CodeBase.UI.SudokuGame
 {
@@ -17,13 +13,7 @@ namespace CodeBase.UI.SudokuGame
 
         [SerializeField] private UIGameBoard _uiGameBoard;
         [SerializeField] private UIInput _uiInput;
-        [SerializeField] private UIThemePanel _uiThemePanel;
-
-        [Space] 
-        [SerializeField] private Button _themeButton;
-        [SerializeField] private Button _pauseButton;
-        [SerializeField] private UITimer _uiTimer;
-        [SerializeField] private TMP_Text _difficultyText;
+        [SerializeField] private UITopPanel _uiTopPanel;
 
         private LevelMenuData _progressLevelMenuData;
         private LastGameData _progressLastGameData;
@@ -53,9 +43,7 @@ namespace CodeBase.UI.SudokuGame
             _uiInput.Init(_uiGameBoard);
             _uiGameBoard.Init(ParseLevel(data), _uiInput);
 
-            _uiThemePanel.Init();
-            _uiTimer.StartTimer();
-            _difficultyText.text = $"{_difficultyGame}";
+            _uiTopPanel.NewGame(_difficultyGame);
         }
 
         public void LoadProgress(PlayerProgress playerProgress)
@@ -73,24 +61,7 @@ namespace CodeBase.UI.SudokuGame
             NewGame();
             _uiGameBoard.LoadUserData(_progressLastGameData);
 
-            _uiTimer.LoadTimer();
-        }
-
-        private void OnEnable()
-        {
-            _themeButton.onClick.AddListener(OnClickThemeButton);
-            _pauseButton.onClick.AddListener(OnClickThemeButton);
-        }
-
-        private void OnDisable()
-        {
-            _themeButton.onClick.RemoveListener(OnClickThemeButton);
-            _pauseButton.onClick.RemoveListener(OnClickThemeButton);
-        }
-
-        private void OnClickThemeButton()
-        {
-            _uiThemePanel.ShowPanel();
+            _uiTopPanel.ContinueGame();
         }
 
         private string LoadLevel(DifficultyGame difficultyGame, int index)

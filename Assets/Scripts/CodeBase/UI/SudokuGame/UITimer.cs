@@ -61,12 +61,13 @@ namespace CodeBase.UI.SudokuGame
 
         private IEnumerator TimerCoroutine()
         {
+            RefreshUI();
+            
             while (true)
             {
                 yield return new WaitForSeconds(1f);
                 
-                _time = _time.Add(new TimeSpan(1000));
-                
+                _time = _time.Add(new TimeSpan(TimeSpan.TicksPerSecond));
                 RefreshUI();
             }
         }

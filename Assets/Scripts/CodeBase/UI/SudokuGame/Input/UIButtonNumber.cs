@@ -6,17 +6,19 @@ using UnityEngine.UI;
 
 namespace CodeBase.UI.SudokuGame.Input
 {
-    public class UIButtonNumber : MonoBehaviour,IThemeReader
+    public class UIButtonNumber : MonoBehaviour, IThemeReader
     {
         [SerializeField] private Button _button;
-
         [SerializeField] private TMP_Text _numberText;
         [SerializeField] private TMP_Text _leftCountText;
         [SerializeField] private Image _background;
 
         public int Number { get; private set; }
+        
         private int _leftNumber;
         private ThemeConfigData _themeConfigData;
+        private bool _contains;
+        private bool _inputNumber = true;
 
         public event Action<int> ClickNumber;
 
@@ -58,7 +60,10 @@ namespace CodeBase.UI.SudokuGame.Input
 
         public void RefreshHint(bool contains)
         {
-            if (contains)
+            _contains = contains;
+            _inputNumber = false;
+            
+            if (_contains)
             {
                 _numberText.color = _themeConfigData.EnableHintTextColor;
                 _leftCountText.color = _themeConfigData.EnableHintTextColor;
@@ -74,6 +79,8 @@ namespace CodeBase.UI.SudokuGame.Input
 
         public void RefreshInput()
         {
+            _inputNumber = true;
+            
             _numberText.color = _themeConfigData.InputTextColor;
             _leftCountText.color = _themeConfigData.InputLeftTextColor;
             _background.color = _themeConfigData.InputBackgroundColor;
@@ -82,6 +89,11 @@ namespace CodeBase.UI.SudokuGame.Input
         public void UpdateTheme(ThemeConfigData themeConfigData)
         {
             _themeConfigData = themeConfigData;
+
+            if (_inputNumber)
+                RefreshInput();
+            else
+                RefreshHint(_contains);
         }
     }
 }

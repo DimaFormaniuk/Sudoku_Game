@@ -3,13 +3,18 @@ using CodeBase.Data;
 using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.Ads;
 using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.UI.Services.Theme;
 using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CodeBase.UI.SudokuGame
 {
-    public class UIGameBoard : MonoBehaviour, IUIInputListener, ISavedProgress
+    public class UIGameBoard : MonoBehaviour, IUIInputListener, ISavedProgress,IThemeReader
     {
+        [SerializeField] private Image _backgroundGame;
+        [SerializeField] private Image _background;
+        
         [SerializeField] private List<UIBlockCells> _uiBlockCells;
 
         private ISaveLoadService _saveLoadService;
@@ -138,6 +143,12 @@ namespace CodeBase.UI.SudokuGame
             RefreshLeftCountNumber();
         }
 
+        public void UpdateTheme(ThemeConfigData themeConfigData)
+        {
+            _backgroundGame.color = themeConfigData.BackgroundGameColor;
+            _background.color = themeConfigData.BackgroundColor;
+        }
+        
         private void OnClickCell(UICellNumber cellNumber)
         {
             _boardData.SetSelectedCell(cellNumber);

@@ -26,6 +26,11 @@ namespace CodeBase.UI.SudokuGame
             _text.gameObject.SetActive(true);
         }
 
+        public void RefreshColor(Color hintColor)
+        {
+            _text.color = hintColor;
+        }
+        
         private void RefreshUI()
         {
             _text.text = $"{Number}";
