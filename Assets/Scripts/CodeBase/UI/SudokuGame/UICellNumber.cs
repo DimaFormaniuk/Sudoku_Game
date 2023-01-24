@@ -26,10 +26,10 @@ namespace CodeBase.UI.SudokuGame
         [SerializeField] private Animation _deniesForHint;
 
         private bool _looked;
-        private ThemeConfigs _themeConfigs;
+        private ThemeConfigData _themeConfigData;
 
         private CellStatus _cellStatus;
-        private bool _userInputNumber;
+
         private bool _correctNumber;
 
         public void Init(int number, int indexCell, int indexBlock)
@@ -62,7 +62,6 @@ namespace CodeBase.UI.SudokuGame
                 return;
             }
 
-            _userInputNumber = true;
             _cellStatus = CellStatus.UserNumber;
             Number = number;
 
@@ -82,7 +81,6 @@ namespace CodeBase.UI.SudokuGame
                 return;
 
             _correctNumber = false;
-            _userInputNumber = false;
             _cellStatus = CellStatus.Empty;
             Number = 0;
             RefreshUI();
@@ -131,11 +129,18 @@ namespace CodeBase.UI.SudokuGame
             RefreshColor();
         }
 
-        public void UpdateTheme(ThemeConfigs themeConfigs)
+        public void UpdateTheme(ThemeConfigData themeConfigData)
         {
-            _themeConfigs = themeConfigs;
+            _themeConfigData = themeConfigData;
 
-            RefreshUI();
+            RefreshColor();
+
+            if (LevelNumber)
+                _numberText.color = _themeConfigData.LevelNumberTextColor;
+            if (!LevelNumber && Number != 0)
+                _numberText.color = _themeConfigData.UserTextColor;
+            if (!LevelNumber && Number != 0 && !CorrectNumber)
+                _numberText.color = _themeConfigData.ErrorTextColor;
         }
 
         public void Error()
@@ -156,27 +161,27 @@ namespace CodeBase.UI.SudokuGame
             switch (_cellStatus)
             {
                 case CellStatus.LevelNumber:
-                    _numberText.color = _themeConfigs.LevelNumberTextColor;
+                    _numberText.color = _themeConfigData.LevelNumberTextColor;
                     break;
                 case CellStatus.UserNumber:
-                    _numberText.color = _themeConfigs.UserTextColor;
+                    _numberText.color = _themeConfigData.UserTextColor;
+                    break;
+                case CellStatus.Error:
+                    _numberText.color = _themeConfigData.ErrorTextColor;
                     break;
                 case CellStatus.Empty:
                     break;
                 case CellStatus.Select:
-                    _background.color = _themeConfigs.SelectCellColor;
+                    _background.color = _themeConfigData.SelectCellColor;
                     break;
                 case CellStatus.Unselect:
-                    _background.color = _themeConfigs.BaseCellColor;
+                    _background.color = _themeConfigData.BaseCellColor;
                     break;
                 case CellStatus.LineSelector:
-                    _background.color = _themeConfigs.SelectorInLineCellColor;
-                    break;
-                case CellStatus.Error:
-                    _numberText.color = _themeConfigs.ErrorTextColor;
+                    _background.color = _themeConfigData.SelectorInLineCellColor;
                     break;
                 case CellStatus.DeniesCell:
-                    _background.color = _themeConfigs.CellDeniesUserInputColor;
+                    _background.color = _themeConfigData.CellDeniesUserInputColor;
                     break;
             }
         }

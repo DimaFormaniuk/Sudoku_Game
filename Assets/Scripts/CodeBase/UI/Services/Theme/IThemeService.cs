@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CodeBase.Infrastructure.Services;
 using CodeBase.UI.Services.Factory;
 
@@ -5,9 +6,10 @@ namespace CodeBase.UI.Services.Theme
 {
     public interface IThemeService : IService, IRegistered
     {
-        void NextTheme();
-        void PreviousTheme();
+        ThemeConfigData CurrentTheme { get; }
+        List<ThemeConfigData> ListThemeConfigs { get; }
         void InfomThemeListeners();
         void Cleanup();
+        void ChangeTheme(int index);
     }
 }

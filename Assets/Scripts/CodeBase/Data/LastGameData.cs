@@ -10,7 +10,7 @@ namespace CodeBase.Data
     {
         public int IndexLevel;
         public DifficultyGame DifficultyGame;
-        public int Time;
+        public long Time;
         public List<int> UserNumbers;
         public List<HintsData> Hints;
 

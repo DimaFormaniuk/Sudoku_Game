@@ -6,14 +6,17 @@ using UnityEngine;
 
 namespace CodeBase.UI.Services.Theme
 {
-    public class ThemeService : IThemeService,ISavedProgress
+    public class ThemeService : IThemeService, ISavedProgress
     {
         public List<IThemeReader> ThemeReaders { get; private set; } = new List<IThemeReader>();
+        public List<ThemeConfigData> ListThemeConfigs => _themeConfigs;
 
         private IStaticDataService _staticDataService;
 
-        private List<ThemeConfigs> _themeConfigs;
+        private List<ThemeConfigData> _themeConfigs;
         private int _index = 0;
+
+        public ThemeConfigData CurrentTheme => _themeConfigs[_index];
 
         public ThemeService(IStaticDataService staticDataService)
         {
@@ -28,21 +31,10 @@ namespace CodeBase.UI.Services.Theme
                 ThemeReaders.Add(themeReader);
         }
 
-        public void NextTheme()
+        public void ChangeTheme(int index)
         {
-            _index++;
-            if (_index > _themeConfigs.Count - 1)
-                _index = 0;
-            
-            InfomThemeListeners();
-        }
+            _index = index;
 
-        public void PreviousTheme()
-        {
-            _index--;
-            if (_index < 0)
-                _index = _themeConfigs.Count - 1;
-            
             InfomThemeListeners();
         }
 

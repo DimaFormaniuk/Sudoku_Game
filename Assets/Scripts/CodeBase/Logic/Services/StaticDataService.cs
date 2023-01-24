@@ -10,7 +10,7 @@ namespace CodeBase.Logic.Services
     {
         private const string BaseResourcesPath = "StaticData/";
         private Dictionary<PrefabId, PrefabConfig> _prefabConfigs;
-        private List<ThemeConfigs> _themeConfigs;
+        private List<ThemeConfigData> _themeConfigs;
 
         public void Load()
         {
@@ -23,7 +23,7 @@ namespace CodeBase.Logic.Services
                 ? config
                 : null;
 
-        public List<ThemeConfigs> GetThemeConfigs()
+        public List<ThemeConfigData> GetThemeConfigs()
         {
             return _themeConfigs;
         }
@@ -40,7 +40,7 @@ namespace CodeBase.Logic.Services
         {
             _themeConfigs = Resources
                 .Load<ThemeStaticData>(BaseResourcesPath + "Theme/ThemeStaticData")
-                .Configs;
+                .configs;
         }
     }
 }

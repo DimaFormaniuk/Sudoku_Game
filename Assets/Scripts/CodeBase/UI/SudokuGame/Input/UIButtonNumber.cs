@@ -16,7 +16,7 @@ namespace CodeBase.UI.SudokuGame.Input
 
         public int Number { get; private set; }
         private int _leftNumber;
-        private ThemeConfigs _themeConfigs;
+        private ThemeConfigData _themeConfigData;
 
         public event Action<int> ClickNumber;
 
@@ -60,28 +60,28 @@ namespace CodeBase.UI.SudokuGame.Input
         {
             if (contains)
             {
-                _numberText.color = _themeConfigs.EnableHintTextColor;
-                _leftCountText.color = _themeConfigs.EnableHintTextColor;
-                _background.color = _themeConfigs.EnableHintBackgroundColor;
+                _numberText.color = _themeConfigData.EnableHintTextColor;
+                _leftCountText.color = _themeConfigData.EnableHintTextColor;
+                _background.color = _themeConfigData.EnableHintBackgroundColor;
             }
             else
             {
-                _numberText.color = _themeConfigs.DisableHintTextColor;
-                _leftCountText.color = _themeConfigs.DisableHintTextColor;
-                _background.color = _themeConfigs.DisableHintBackgroundColor;
+                _numberText.color = _themeConfigData.DisableHintTextColor;
+                _leftCountText.color = _themeConfigData.DisableHintTextColor;
+                _background.color = _themeConfigData.DisableHintBackgroundColor;
             }
         }
 
         public void RefreshInput()
         {
-            _numberText.color = _themeConfigs.InputTextColor;
-            _leftCountText.color = _themeConfigs.InputLeftTextColor;
-            _background.color = _themeConfigs.InputBackgroundColor;
+            _numberText.color = _themeConfigData.InputTextColor;
+            _leftCountText.color = _themeConfigData.InputLeftTextColor;
+            _background.color = _themeConfigData.InputBackgroundColor;
         }
 
-        public void UpdateTheme(ThemeConfigs themeConfigs)
+        public void UpdateTheme(ThemeConfigData themeConfigData)
         {
-            _themeConfigs = themeConfigs;
+            _themeConfigData = themeConfigData;
         }
     }
 }

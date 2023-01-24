@@ -12,20 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aa58554dc8943179941e683a8678131, type: 3}
   m_Name: ThemeStaticData
   m_EditorClassIdentifier: 
-  Configs:
-  - LevelNumberTextColor: {r: 0.6901961, g: 0.6901961, b: 0.7176471, a: 1}
-    UserTextColor: {r: 0.427451, g: 0.5411765, b: 0.78823537, a: 1}
-    ErrorTextColor: {r: 0.8235295, g: 0.36862746, b: 0.36862746, a: 1}
-    BaseCellColor: {r: 0.12941177, g: 0.14117648, b: 0.20000002, a: 1}
-    SelectCellColor: {r: 0.21176472, g: 0.30588236, b: 0.4784314, a: 1}
-    SelectorInLineCellColor: {r: 0.06666667, g: 0.078431375, b: 0.10588236, a: 1}
-    CellDeniesUserInputColor: {r: 0.745283, g: 0, b: 0, a: 1}
-    BlockLinesColor: {r: 0.09411766, g: 0.10588236, b: 0.16470589, a: 1}
-    SelectorBlockLinesColor: {r: 0, g: 0, b: 0, a: 0}
-    InputTextColor: {r: 0.427451, g: 0.5568628, b: 0.8470589, a: 1}
-    InputLeftTextColor: {r: 0.5294118, g: 0.5372549, b: 0.59607846, a: 1}
-    InputBackgroundColor: {r: 0.1254902, g: 0.12941177, b: 0.20392159, a: 1}
-    EnableHintTextColor: {r: 1, g: 1, b: 1, a: 1}
-    EnableHintBackgroundColor: {r: 0.1254902, g: 0.12941177, b: 0.20392159, a: 1}
-    DisableHintTextColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 1}
-    DisableHintBackgroundColor: {r: 0.18867922, g: 0.18867922, b: 0.18867922, a: 1}
+  configs:
+  - {fileID: 11400000, guid: 7850effc8ab82274b91329f7d12cd018, type: 2}
+  - {fileID: 11400000, guid: 05d0280b6d778f340a42affae59e1726, type: 2}
+  - {fileID: 11400000, guid: 9f0c61b1b13f6dd40aec163ef8deb06d, type: 2}
+  - {fileID: 11400000, guid: dc6ff86160f7b0c4f8e74692735f222b, type: 2}

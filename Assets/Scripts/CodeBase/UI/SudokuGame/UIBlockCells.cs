@@ -12,7 +12,7 @@ namespace CodeBase.UI.SudokuGame
         [SerializeField] private List<UICellNumber> _uiCellNumbers;
         [SerializeField] private List<Image> _lines;
         private int _calculateIndex;
-        private ThemeConfigs _themeConfigs;
+        private ThemeConfigData _themeConfigData;
 
         public int IndexBlock { get; private set; }
 
@@ -46,16 +46,16 @@ namespace CodeBase.UI.SudokuGame
             _uiCellNumbers.ForEach(x => x.SelectorLine());
         }
 
-        public void UpdateTheme(ThemeConfigs themeConfigs)
+        public void UpdateTheme(ThemeConfigData themeConfigData)
         {
-            _themeConfigs = themeConfigs;
+            _themeConfigData = themeConfigData;
 
             RefreshColor();
         }
 
         private void RefreshColor()
         {
-            _lines.ForEach(x => x.color = _themeConfigs.BlockLinesColor);
+            _lines.ForEach(x => x.color = _themeConfigData.BlockLinesColor);
         }
 
         public void SetUserNumbers(List<int> number)
