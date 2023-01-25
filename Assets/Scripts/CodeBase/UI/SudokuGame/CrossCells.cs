@@ -19,6 +19,13 @@ namespace CodeBase.UI.SudokuGame
             return numbers;
         }
 
+        public List<CellNumber> GetCrossCellsFull(CellNumber cellNumber)
+        {
+            List<CellNumber> numbers = GetCrossCells(cellNumber);
+            numbers.Add(cellNumber);
+            return numbers;
+        }
+
         private List<CellNumber> GetLinesNumbers(CellNumber cellNumber)
         {
             List<CellNumber> result = new List<CellNumber>();

@@ -51,13 +51,11 @@ namespace CodeBase.UI.Services.Theme
         public void LoadProgress(PlayerProgress playerProgress)
         {
             _index = playerProgress.ThemeData.IndexTheme;
-            Debug.LogError($"load {playerProgress.ThemeData.IndexTheme}");
         }
 
         public void UpdateProgress(PlayerProgress playerProgress)
         {
             playerProgress.ThemeData.IndexTheme = _index;
-            Debug.LogError($"update {playerProgress.ThemeData.IndexTheme}");
         }
     }
 }

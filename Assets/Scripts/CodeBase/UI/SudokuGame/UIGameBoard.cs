@@ -68,8 +68,8 @@ namespace CodeBase.UI.SudokuGame
         public void InputNumber(int number)
         {
             _refresherBoardNumbers.InputNumber(number);
-            _refresherBoardHints.RefreshUserInputHints();
             _checkerError.CheckError();
+            _refresherBoardHints.RefreshUserInputHints();
             _checkerEndGame.CheckEndGame();
 
             RefreshLeftCountNumber();

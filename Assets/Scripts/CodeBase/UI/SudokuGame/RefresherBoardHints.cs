@@ -56,7 +56,7 @@ namespace CodeBase.UI.SudokuGame
             for (int i = 1; i <= _boardData.Size; i++)
                 hints.Add(i);
 
-            List<CellNumber> numbers = _crossCells.GetCrossCells(cellNumber);
+            List<CellNumber> numbers = _crossCells.GetCrossCellsFull(cellNumber);
             foreach (var uiCellNumber in numbers)
                 if (uiCellNumber.Number != 0 && (uiCellNumber.CorrectNumber || uiCellNumber.LevelNumber))
                     if (hints.Contains(uiCellNumber.Number))

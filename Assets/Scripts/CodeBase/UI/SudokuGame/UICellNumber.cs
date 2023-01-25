@@ -8,19 +8,19 @@ namespace CodeBase.UI.SudokuGame
     {
         public int Number { get; private set; }
         public bool LevelNumber => _cellNumberStatus == CellNumberStatus.LevelNumber;
-        public bool CorrectNumber => LevelNumber || _correctNumber;
+        public bool CorrectNumber => _correctNumber;
 
         [SerializeField] private TMP_Text _numberText;
 
         private CellNumberStatus _cellNumberStatus;
         private ThemeConfigData _themeConfigData;
         private bool _correctNumber;
-        
+
         public void Init(int number)
         {
             Number = number;
-
             _cellNumberStatus = CellNumberStatus.Empty;
+            _correctNumber = Number != 0;
 
             if (Number != 0)
                 _cellNumberStatus = CellNumberStatus.LevelNumber;
@@ -37,7 +37,7 @@ namespace CodeBase.UI.SudokuGame
         {
             if (LevelNumber)
                 return;
-            
+
             if (Number == number)
             {
                 ClearNumber();
@@ -45,7 +45,6 @@ namespace CodeBase.UI.SudokuGame
             }
 
             Number = number;
-            _cellNumberStatus = CellNumberStatus.UserNumber;
 
             RefreshUI();
         }
@@ -54,28 +53,29 @@ namespace CodeBase.UI.SudokuGame
         {
             if (LevelNumber)
                 return;
-            
+
             Number = 0;
             _cellNumberStatus = CellNumberStatus.Empty;
             _correctNumber = false;
-            
+
             RefreshUI();
         }
 
         public void Error()
         {
-            _cellNumberStatus = CellNumberStatus.Error;
+            _cellNumberStatus = CellNumberStatus.ErrorNumber;
 
             RefreshUI();
         }
 
         public void CellCorrectNumber()
         {
-            _cellNumberStatus = CellNumberStatus.UserNumber;
+            _cellNumberStatus = CellNumberStatus.CorrectNumber;
+            _correctNumber = true;
 
             RefreshUI();
         }
-        
+
         private void RefreshUI()
         {
             _numberText.text = $"{Number}";
@@ -89,13 +89,13 @@ namespace CodeBase.UI.SudokuGame
                 case CellNumberStatus.LevelNumber:
                     _numberText.color = _themeConfigData.LevelNumberTextColor;
                     break;
-                case CellNumberStatus.UserNumber:
+                case CellNumberStatus.CorrectNumber:
                     _numberText.color = _themeConfigData.UserTextColor;
                     break;
                 case CellNumberStatus.Empty:
                     _numberText.color = _themeConfigData.LevelNumberTextColor;
                     break;
-                case CellNumberStatus.Error:
+                case CellNumberStatus.ErrorNumber:
                     _numberText.color = _themeConfigData.ErrorTextColor;
                     break;
             }
