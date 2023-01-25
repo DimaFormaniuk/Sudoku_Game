@@ -21,7 +21,7 @@ namespace CodeBase.UI.SudokuGame
 
         private void CheckErrorSelectCell()
         {
-            List<UICellNumber> cells = _crossCells.GetCrossCells(_boardData.SelectedCell);
+            List<CellNumber> cells = _crossCells.GetCrossCells(_boardData.SelectedCell);
             cells.ForEach(x =>
             {
                 if (x.Number != 0 && x.Number == _boardData.SelectedCell.Number)
@@ -36,7 +36,7 @@ namespace CodeBase.UI.SudokuGame
                 bool correctNumber = true;
                 if (cellNumber.LevelNumber == false && cellNumber.Number != 0)
                 {
-                    List<UICellNumber> numbers = _crossCells.GetCrossCells(cellNumber);
+                    List<CellNumber> numbers = _crossCells.GetCrossCells(cellNumber);
 
                     foreach (var number in numbers)
                     {

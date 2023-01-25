@@ -4,6 +4,6 @@ namespace CodeBase.UI.SudokuGame
 {
     public interface ICrossCells
     {
-        List<UICellNumber> GetCrossCells(UICellNumber x);
+        List<CellNumber> GetCrossCells(CellNumber x);
     }
 }

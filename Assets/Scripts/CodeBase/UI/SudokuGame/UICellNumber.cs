@@ -1,214 +1,104 @@
-using System;
-using System.Collections.Generic;
 using CodeBase.UI.Services.Theme;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CodeBase.UI.SudokuGame
 {
     public class UICellNumber : MonoBehaviour, IThemeReader
     {
         public int Number { get; private set; }
-        public int IndexCell { get; private set; }
-        public Vector2Int IndexCellVector { get; private set; }
-        public int IndexBlock { get; private set; }
-        public bool LevelNumber => _looked;
-        public bool CorrectNumber => _correctNumber;
+        public bool LevelNumber => _cellNumberStatus == CellNumberStatus.LevelNumber;
+        public bool CorrectNumber => LevelNumber || _correctNumber;
 
-
-        public event Action<UICellNumber> ClickCell;
-
-        [SerializeField] private Button _button;
         [SerializeField] private TMP_Text _numberText;
-        [SerializeField] private Image _background;
-        [SerializeField] private UIHints _uiHints;
-        [SerializeField] private Animation _deniesForHint;
 
-        private bool _looked;
+        private CellNumberStatus _cellNumberStatus;
         private ThemeConfigData _themeConfigData;
-
-        private CellStatus _cellStatus;
-
         private bool _correctNumber;
-
-        public void Init(int number, int indexCell, int indexBlock)
+        
+        public void Init(int number)
         {
             Number = number;
-            IndexCell = indexCell;
-            IndexBlock = indexBlock;
-            IndexCellVector = new Vector2Int((IndexCell - 1) % 9, (IndexCell - 1) / 9);
 
-            _cellStatus = CellStatus.Empty;
+            _cellNumberStatus = CellNumberStatus.Empty;
 
-            _correctNumber = _looked = Number != 0;
-            if (_looked == false)
-                _cellStatus = CellStatus.LevelNumber;
-
-            _uiHints.Init();
-            _uiHints.HideAll();
+            if (Number != 0)
+                _cellNumberStatus = CellNumberStatus.LevelNumber;
 
             RefreshUI();
         }
 
+        public void UpdateTheme(ThemeConfigData themeConfigData)
+        {
+            _themeConfigData = themeConfigData;
+        }
+
         public void SetUserNumber(int number)
         {
-            if (_looked)
+            if (LevelNumber)
                 return;
-
+            
             if (Number == number)
             {
                 ClearNumber();
                 return;
             }
 
-            _cellStatus = CellStatus.UserNumber;
             Number = number;
+            _cellNumberStatus = CellNumberStatus.UserNumber;
 
             RefreshUI();
-            RefreshColor();
-            ClearHints();
-        }
-
-        public void CellCorrectNumber()
-        {
-            _correctNumber = true;
         }
 
         public void ClearNumber()
         {
-            if (_looked)
-                return;
-
-            _correctNumber = false;
-            _cellStatus = CellStatus.Empty;
-            Number = 0;
-            RefreshUI();
-            RefreshColor();
-        }
-
-        private void RefreshUI()
-        {
-            _numberText.text = $"{Number}";
-            _numberText.gameObject.SetActive(Number != 0);
-        }
-
-        private void OnEnable()
-        {
-            _button.onClick.AddListener(OnClick);
-        }
-
-        private void OnDisable()
-        {
-            _button.onClick.RemoveListener(OnClick);
-        }
-
-        private void OnClick()
-        {
-            ClickCell?.Invoke(this);
-        }
-
-        public void Unselect()
-        {
-            _cellStatus = CellStatus.Unselect;
-
-            RefreshColor();
-        }
-
-        public void Select()
-        {
-            _cellStatus = CellStatus.Select;
-
-            RefreshColor();
-        }
-
-        public void SelectorLine()
-        {
-            _cellStatus = CellStatus.LineSelector;
-
-            RefreshColor();
-        }
-
-        public void UpdateTheme(ThemeConfigData themeConfigData)
-        {
-            _themeConfigData = themeConfigData;
-
-            RefreshColor();
-
             if (LevelNumber)
-                _numberText.color = _themeConfigData.LevelNumberTextColor;
-            if (!LevelNumber && Number != 0)
-                _numberText.color = _themeConfigData.UserTextColor;
-            if (!LevelNumber && Number != 0 && !CorrectNumber)
-                _numberText.color = _themeConfigData.ErrorTextColor;
+                return;
+            
+            Number = 0;
+            _cellNumberStatus = CellNumberStatus.Empty;
+            _correctNumber = false;
+            
+            RefreshUI();
         }
 
         public void Error()
         {
-            _cellStatus = CellStatus.Error;
-            _correctNumber = false;
-            RefreshColor();
+            _cellNumberStatus = CellNumberStatus.Error;
+
+            RefreshUI();
         }
 
-        public void DeniesNumber()
+        public void CellCorrectNumber()
         {
-            _cellStatus = CellStatus.DeniesCell;
-            RefreshColor();
-        }
+            _cellNumberStatus = CellNumberStatus.UserNumber;
 
-        private void RefreshColor()
+            RefreshUI();
+        }
+        
+        private void RefreshUI()
         {
-            switch (_cellStatus)
+            _numberText.text = $"{Number}";
+            _numberText.gameObject.SetActive(Number != 0);
+
+            if (Number == 0)
+                return;
+
+            switch (_cellNumberStatus)
             {
-                case CellStatus.LevelNumber:
+                case CellNumberStatus.LevelNumber:
                     _numberText.color = _themeConfigData.LevelNumberTextColor;
                     break;
-                case CellStatus.UserNumber:
+                case CellNumberStatus.UserNumber:
                     _numberText.color = _themeConfigData.UserTextColor;
                     break;
-                case CellStatus.Error:
+                case CellNumberStatus.Empty:
+                    _numberText.color = _themeConfigData.LevelNumberTextColor;
+                    break;
+                case CellNumberStatus.Error:
                     _numberText.color = _themeConfigData.ErrorTextColor;
                     break;
-                case CellStatus.Empty:
-                    break;
-                case CellStatus.Select:
-                    _background.color = _themeConfigData.SelectCellColor;
-                    break;
-                case CellStatus.Unselect:
-                    _background.color = _themeConfigData.BaseCellColor;
-                    break;
-                case CellStatus.LineSelector:
-                    _background.color = _themeConfigData.SelectorInLineCellColor;
-                    break;
-                case CellStatus.DeniesCell:
-                    _background.color = _themeConfigData.CellDeniesUserInputColor;
-                    break;
             }
-        }
-
-        public void SetHints(List<int> hints)
-        {
-            _uiHints.SetHints(hints);
-        }
-
-        public void SetUserHint(int number)
-        {
-            _uiHints.SetUserHint(number);
-        }
-
-        public void ClearHints()
-        {
-            _uiHints.HideAll();
-        }
-
-        public void ShowDeniesForHints()
-        {
-            _deniesForHint.Play();
-        }
-
-        public List<int> GetHints()
-        {
-            return _uiHints.GetHints();
         }
     }
 }

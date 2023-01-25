@@ -6,11 +6,11 @@ namespace CodeBase.UI.SudokuGame
     {
         int Size { get; }
         List<UIBlockCells> BlockCells { get; }
-        UICellNumber[,] BoardArray { get; }
-        List<UICellNumber> BoardList { get; }
-        UICellNumber SelectedCell { get; }
+        CellNumber[,] BoardArray { get; }
+        List<CellNumber> BoardList { get; }
+        CellNumber SelectedCell { get; }
         void InitBoard();
-        void SetSelectedCell(UICellNumber cellNumber);
+        void SetSelectedCell(CellNumber cellNumber);
         void SetLevelNumber(List<int> parseData);
     }
 }

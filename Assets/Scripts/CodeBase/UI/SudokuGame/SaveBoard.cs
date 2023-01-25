@@ -23,7 +23,7 @@ namespace CodeBase.UI.SudokuGame
             List<int> numbers = new List<int>();
             foreach (UIBlockCells uiBlockCells in _boardData.BlockCells)
             {
-                foreach (UICellNumber uiCellNumber in uiBlockCells.UICellNumbers)
+                foreach (CellNumber uiCellNumber in uiBlockCells.UICellNumbers)
                 {
                     if (uiCellNumber.LevelNumber)
                         numbers.Add(0);
@@ -40,7 +40,7 @@ namespace CodeBase.UI.SudokuGame
             List<HintsData> hints = new List<HintsData>();
             foreach (UIBlockCells uiBlockCells in _boardData.BlockCells)
             {
-                foreach (UICellNumber uiCellNumber in uiBlockCells.UICellNumbers)
+                foreach (CellNumber uiCellNumber in uiBlockCells.UICellNumbers)
                 {
                     HintsData hintsData = new HintsData();
                     hintsData.Hints = uiCellNumber.GetHints();

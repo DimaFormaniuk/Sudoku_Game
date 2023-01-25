@@ -23,7 +23,7 @@ namespace CodeBase.UI.SudokuGame
 
         public void RefreshUserInputHints()
         {
-            foreach (UICellNumber uiCellNumber in _boardData.BoardList)
+            foreach (CellNumber uiCellNumber in _boardData.BoardList)
             {
                 List<int> list = uiCellNumber.GetHints();
                 List<int> possibleNumbers = GetPossiblyHints(uiCellNumber);
@@ -50,13 +50,13 @@ namespace CodeBase.UI.SudokuGame
             }
         }
 
-        private List<int> GetPossiblyHints(UICellNumber cellNumber)
+        private List<int> GetPossiblyHints(CellNumber cellNumber)
         {
             List<int> hints = new List<int>();
             for (int i = 1; i <= _boardData.Size; i++)
                 hints.Add(i);
 
-            List<UICellNumber> numbers = _crossCells.GetCrossCells(cellNumber);
+            List<CellNumber> numbers = _crossCells.GetCrossCells(cellNumber);
             foreach (var uiCellNumber in numbers)
                 if (uiCellNumber.Number != 0 && (uiCellNumber.CorrectNumber || uiCellNumber.LevelNumber))
                     if (hints.Contains(uiCellNumber.Number))
@@ -67,7 +67,7 @@ namespace CodeBase.UI.SudokuGame
 
         private void ShowDeniesForHints(int number)
         {
-            foreach (UICellNumber uiCellNumber in _crossCells.GetCrossCells(_boardData.SelectedCell))
+            foreach (CellNumber uiCellNumber in _crossCells.GetCrossCells(_boardData.SelectedCell))
                 if (uiCellNumber.Number == number)
                     uiCellNumber.ShowDeniesForHints();
         }

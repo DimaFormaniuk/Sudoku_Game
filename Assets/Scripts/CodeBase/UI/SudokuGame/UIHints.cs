@@ -7,31 +7,19 @@ namespace CodeBase.UI.SudokuGame
     public class UIHints : MonoBehaviour, IThemeReader
     {
         [SerializeField] private List<UIHint> _hints;
+        [SerializeField] private Animation _deniesForHint;
 
         private List<int> _showedHints = new List<int>();
 
-        public void Init()
-        {
-            InitHints();
-        }
-
-        private void InitHints()
+        public void Init(bool levelNumber)
         {
             for (int i = 0; i < _hints.Count; i++)
                 _hints[i].Init(i + 1);
         }
 
-        public void HideAll()
-        {
-            for (int i = 0; i < _hints.Count; i++)
-                _hints[i].Hide();
-
-            _showedHints = new List<int>();
-        }
-
         public void SetHints(List<int> hints)
         {
-            HideAll();
+            ClearHints();
 
             foreach (var index in hints)
                 _hints[index - 1].Show();
@@ -62,6 +50,19 @@ namespace CodeBase.UI.SudokuGame
         {
             foreach (var uiHint in _hints)
                 uiHint.RefreshColor(themeConfigData.HintColor);
+        }
+
+        public void ShowDeniesForHints()
+        {
+            _deniesForHint.Play();
+        }
+
+        public void ClearHints()
+        {
+            for (int i = 0; i < _hints.Count; i++)
+                _hints[i].Hide();
+
+            _showedHints = new List<int>();
         }
     }
 }

@@ -7,9 +7,9 @@ namespace CodeBase.UI.SudokuGame
 {
     public class UIBlockCells : MonoBehaviour, IThemeReader
     {
-        public List<UICellNumber> UICellNumbers => _uiCellNumbers;
+        public List<CellNumber> UICellNumbers => _uiCellNumbers;
 
-        [SerializeField] private List<UICellNumber> _uiCellNumbers;
+        [SerializeField] private List<CellNumber> _uiCellNumbers;
         [SerializeField] private List<Image> _lines;
         private int _calculateIndex;
         private ThemeConfigData _themeConfigData;
@@ -21,24 +21,21 @@ namespace CodeBase.UI.SudokuGame
             IndexBlock = index;
 
             for (var i = 0; i < _uiCellNumbers.Count; i++)
-            {
-                int indexCell = CalculateIndex(i);
-                _uiCellNumbers[i].Init(number[i], indexCell, IndexBlock);
-            }
+                _uiCellNumbers[i].Init(number[i], CalculateIndex(i), IndexBlock);
         }
 
-        private int CalculateIndex(int i)
+        private Vector2Int CalculateIndex(int i)
         {
             int x = ((i / 3) * 9);
             int y = i % 3;
             int k = ((IndexBlock - 1) / 3) * 3 * 9;
             int l = ((IndexBlock - 1) % 3) * 3;
 
-            _calculateIndex = 1 + x + y + k + l;
+            _calculateIndex = x + y + k + l;
 
             //Debug.LogError($"i={_calculateIndex} x={x} y={y} k={k} l={l}");
 
-            return _calculateIndex;
+            return new Vector2Int(_calculateIndex % 9, _calculateIndex / 9);
         }
 
         public void SelectorInBlock()

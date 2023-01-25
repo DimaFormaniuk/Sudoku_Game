@@ -149,7 +149,7 @@ namespace CodeBase.UI.SudokuGame
             _background.color = themeConfigData.BackgroundColor;
         }
         
-        private void OnClickCell(UICellNumber cellNumber)
+        private void OnClickCell(CellNumber cellNumber)
         {
             _boardData.SetSelectedCell(cellNumber);
 

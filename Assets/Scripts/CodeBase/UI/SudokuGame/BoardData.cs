@@ -6,15 +6,15 @@ namespace CodeBase.UI.SudokuGame
     {
         public int Size { get; private set; } = 9;
         public List<UIBlockCells> BlockCells => _uiBlockCells;
-        public UICellNumber[,] BoardArray => _boardArray;
-        public List<UICellNumber> BoardList => _boardList;
-        public UICellNumber SelectedCell => _selectedCell;
+        public CellNumber[,] BoardArray => _boardArray;
+        public List<CellNumber> BoardList => _boardList;
+        public CellNumber SelectedCell => _selectedCell;
 
         private readonly List<UIBlockCells> _uiBlockCells;
 
-        private UICellNumber[,] _boardArray;
-        private List<UICellNumber> _boardList;
-        private UICellNumber _selectedCell;
+        private CellNumber[,] _boardArray;
+        private List<CellNumber> _boardList;
+        private CellNumber _selectedCell;
 
         public BoardData(List<UIBlockCells> uiBlockCells)
         {
@@ -23,8 +23,8 @@ namespace CodeBase.UI.SudokuGame
 
         public void InitBoard()
         {
-            _boardArray = new UICellNumber[Size, Size];
-            _boardList = new List<UICellNumber>();
+            _boardArray = new CellNumber[Size, Size];
+            _boardList = new List<CellNumber>();
 
             for (int i = 0; i < Size; i++)
             {
@@ -39,7 +39,7 @@ namespace CodeBase.UI.SudokuGame
             _selectedCell = FindFirsEmptyCell();
         }
 
-        public void SetSelectedCell(UICellNumber cellNumber) =>
+        public void SetSelectedCell(CellNumber cellNumber) =>
             _selectedCell = cellNumber;
 
         public void SetLevelNumber(List<int> parseData)
@@ -55,7 +55,7 @@ namespace CodeBase.UI.SudokuGame
             }
         }
 
-        private UICellNumber FindFirsEmptyCell()
+        private CellNumber FindFirsEmptyCell()
         {
             return _boardList.Find(x => x.Number == 0);
         }

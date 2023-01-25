@@ -8,7 +8,8 @@ namespace CodeBase.UI.Services.Factory
 {
     public class UIFactory : IUIFactory
     {
-        private List<IRegistered> ListRegistered = new List<IRegistered>();
+        private List<IRegistered> _allLifeListRegistered = new List<IRegistered>();
+        private List<IRegistered> _listRegistered = new List<IRegistered>();
 
         private readonly IStaticDataService _staticData;
         private readonly IPersistentProgressService _progressService;
@@ -23,9 +24,14 @@ namespace CodeBase.UI.Services.Factory
             _progressService = progressService;
         }
 
+        public void RegisteredAllLife(IRegistered registered)
+        {
+            _allLifeListRegistered.Add(registered);
+        }        
+        
         public void Registered(IRegistered registered)
         {
-            ListRegistered.Add(registered);
+            _listRegistered.Add(registered);
         }
         
         public GameObject CreateUIRoot()
@@ -91,12 +97,13 @@ namespace CodeBase.UI.Services.Factory
 
         private void RegisterWatchers(GameObject gameObject)
         {
-            ListRegistered.ForEach(x => x.Register(gameObject));
+            _listRegistered.ForEach(x => x.Register(gameObject));
+            _allLifeListRegistered.ForEach(x => x.Register(gameObject));
         }
 
         public void Cleanup()
         {
-            ListRegistered.ForEach(x => x.Cleanup());
+            _listRegistered.ForEach(x => x.Cleanup());
         }
     }
 }

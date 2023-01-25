@@ -1,14 +1,11 @@
 namespace CodeBase.UI.SudokuGame
 {
-    public enum CellStatus
+    public enum CellBackgroundStatus
     {
-        LevelNumber,
-        UserNumber,
         Empty,
         Select,
         Unselect,
         LineSelector,
-        Error,
         DeniesCell
     }
 }

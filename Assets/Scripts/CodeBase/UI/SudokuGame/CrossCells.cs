@@ -11,34 +11,34 @@ namespace CodeBase.UI.SudokuGame
             _boardData = boardData;
         }
 
-        public List<UICellNumber> GetCrossCells(UICellNumber x)
+        public List<CellNumber> GetCrossCells(CellNumber x)
         {
-            List<UICellNumber> numbers = new List<UICellNumber>();
+            List<CellNumber> numbers = new List<CellNumber>();
             numbers.AddRange(GetBlockNumbers(x));
             numbers.AddRange(GetLinesNumbers(x));
             return numbers;
         }
 
-        private List<UICellNumber> GetLinesNumbers(UICellNumber uiCellNumber)
+        private List<CellNumber> GetLinesNumbers(CellNumber cellNumber)
         {
-            List<UICellNumber> result = new List<UICellNumber>();
+            List<CellNumber> result = new List<CellNumber>();
 
-            int x = uiCellNumber.IndexCellVector.x;
-            int y = uiCellNumber.IndexCellVector.y;
+            int x = cellNumber.IndexCellVector.x;
+            int y = cellNumber.IndexCellVector.y;
 
             for (int i = 0; i < _boardData.Size; i++)
             {
-                if (_boardData.BoardArray[x, i].IndexBlock != uiCellNumber.IndexBlock)
+                if (_boardData.BoardArray[x, i].IndexBlock != cellNumber.IndexBlock)
                     result.Add(_boardData.BoardArray[x, i]);
-                if (_boardData.BoardArray[i, y].IndexBlock != uiCellNumber.IndexBlock)
+                if (_boardData.BoardArray[i, y].IndexBlock != cellNumber.IndexBlock)
                     result.Add(_boardData.BoardArray[i, y]);
             }
 
             return result;
         }
 
-        private List<UICellNumber> GetBlockNumbers(UICellNumber uiCellNumber) =>
-            _boardData.BoardList.FindAll(x => x.IndexBlock == uiCellNumber.IndexBlock
-                                              && x.IndexCell != uiCellNumber.IndexCell);
+        private List<CellNumber> GetBlockNumbers(CellNumber cellNumber) =>
+            _boardData.BoardList.FindAll(x => x.IndexBlock == cellNumber.IndexBlock
+                                              && x.IndexCellVector != cellNumber.IndexCellVector);
     }
 }
