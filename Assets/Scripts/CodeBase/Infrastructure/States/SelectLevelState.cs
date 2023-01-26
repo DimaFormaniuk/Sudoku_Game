@@ -6,21 +6,21 @@ namespace CodeBase.Infrastructure.States
     public class SelectLevelState : IState
     {
         private readonly GameStateMachine _gameStateMachine;
-        private readonly IUIFactory _uiFactory;
+        private readonly IUIFactoryService _iuiFactoryService;
         private readonly ISaveLoadService _saveLoadService;
         
-        public SelectLevelState(GameStateMachine gameStateMachine, IUIFactory uiFactory, ISaveLoadService saveLoadService)
+        public SelectLevelState(GameStateMachine gameStateMachine, IUIFactoryService iuiFactoryService, ISaveLoadService saveLoadService)
         {
             _saveLoadService = saveLoadService;
-            _uiFactory = uiFactory;
+            _iuiFactoryService = iuiFactoryService;
             _gameStateMachine = gameStateMachine;
         }
 
         public void Enter()
         {
-            _uiFactory.Cleanup();
-            _uiFactory.ClearRoot();
-            _uiFactory.CreateMenu();
+            _iuiFactoryService.Cleanup();
+            _iuiFactoryService.ClearRoot();
+            _iuiFactoryService.CreateMenu();
 
             _saveLoadService.InformProgressReaders();
         }

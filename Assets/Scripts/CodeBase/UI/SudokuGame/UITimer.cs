@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.UI.Services.Theme;
 using TMPro;
 using UnityEngine;
 
 namespace CodeBase.UI.SudokuGame
 {
-    public class UITimer : MonoBehaviour, ISavedProgress
+    public class UITimer : MonoBehaviour, ISavedProgress,IThemeReader
     {
         [SerializeField] private TMP_Text timerText;
 
@@ -53,6 +54,11 @@ namespace CodeBase.UI.SudokuGame
             playerProgress.LastGameData.Time = _time.Ticks;
         }
 
+        public string GetTimeText()
+        {
+            return timerText.text;
+        }
+        
         private void OnDestroy()
         {
             if (_timerCoroutine != null)
@@ -75,6 +81,11 @@ namespace CodeBase.UI.SudokuGame
         private void RefreshUI()
         {
             timerText.text = _time.ToString(_time.Hours > 0 ? @"hh\:mm\:ss" : @"mm\:ss");
+        }
+
+        public void UpdateTheme(ThemeConfigData themeConfigData)
+        {
+            timerText.color = themeConfigData.InputLeftTextColor;
         }
     }
 }

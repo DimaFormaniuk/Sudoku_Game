@@ -7,13 +7,13 @@ namespace CodeBase.Infrastructure.States
     {
         private readonly GameStateMachine _gameStateMachine;
         private readonly SceneLoader _sceneLoader;
-        private readonly IUIFactory _uiFactory;
+        private readonly IUIFactoryService _iuiFactoryService;
 
-        public LoadMainState(GameStateMachine gameStateMachine, SceneLoader sceneLoader,IUIFactory uiFactory)
+        public LoadMainState(GameStateMachine gameStateMachine, SceneLoader sceneLoader,IUIFactoryService iuiFactoryService)
         {
             _gameStateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
-            _uiFactory = uiFactory;
+            _iuiFactoryService = iuiFactoryService;
         }
 
         public void Enter()
@@ -27,7 +27,7 @@ namespace CodeBase.Infrastructure.States
 
         private void OnLoaded()
         {
-            _uiFactory.CreateUIRoot();
+            _iuiFactoryService.CreateUIRoot();
             
             _gameStateMachine.Enter<SelectLevelState>();
         }

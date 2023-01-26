@@ -18,14 +18,14 @@ namespace CodeBase.Infrastructure.States
             _states = new Dictionary<Type, IExitableState>
             {
                 [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
-                [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
+                [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
                 [typeof(LateRegistrationState)] = new LateRegistrationState(this, services),
-                [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IUIFactory>()),
-                [typeof(SelectLevelState)] = new SelectLevelState(this,services.Single<IUIFactory>(), services.Single<ISaveLoadService>()),
-                [typeof(NewGameState)] = new NewGameState(this,services.Single<IUIFactory>(),services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
-                [typeof(ContinueGameState)] = new ContinueGameState(this,services.Single<IUIFactory>(),services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
+                [typeof(LoadMainState)] = new LoadMainState(this, sceneLoader, services.Single<IUIFactoryService>()),
+                [typeof(SelectLevelState)] = new SelectLevelState(this,services.Single<IUIFactoryService>(), services.Single<ISaveLoadService>()),
+                [typeof(NewGameState)] = new NewGameState(this,services.Single<IUIFactoryService>(),services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
+                [typeof(ContinueGameState)] = new ContinueGameState(this,services.Single<IUIFactoryService>(),services.Single<ISaveLoadService>(),services.Single<IThemeService>()),
                 [typeof(GameLoopState)] = new GameLoopState(this),
-                [typeof(EndGameState)] = new EndGameState(this,services.Single<IUIFactory>(), services.Single<ISaveLoadService>(),services.Single<IPersistentProgressService>()),
+                [typeof(EndGameState)] = new EndGameState(this,services.Single<IUIFactoryService>(), services.Single<ISaveLoadService>(),services.Single<IPersistentProgressService>()),
             };
         }
 

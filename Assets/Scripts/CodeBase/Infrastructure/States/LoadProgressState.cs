@@ -1,6 +1,7 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure.Services.PersistentProgress;
 using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.UI.Services.Theme;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -9,10 +10,12 @@ namespace CodeBase.Infrastructure.States
         private readonly GameStateMachine _stateMachine;
         private readonly IPersistentProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
+        private readonly IThemeService _themeService;
 
         public LoadProgressState(GameStateMachine stateMachine, IPersistentProgressService progressService,
-            ISaveLoadService saveLoadService)
+            ISaveLoadService saveLoadService,IThemeService themeService)
         {
+            _themeService = themeService;
             _stateMachine = stateMachine;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
@@ -21,8 +24,14 @@ namespace CodeBase.Infrastructure.States
         public void Enter()
         {
             LoadProgressOrInitNew();
+            LoadTheme();
             
             _stateMachine.Enter<LateRegistrationState>();
+        }
+
+        private void LoadTheme()
+        {
+            _themeService.ChangeTheme(_progressService.Progress.ThemeData.IndexTheme);
         }
 
         public void Exit()

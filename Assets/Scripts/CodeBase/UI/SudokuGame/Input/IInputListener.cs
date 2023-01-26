@@ -1,6 +1,6 @@
 namespace CodeBase.UI.SudokuGame.Input
 {
-    public interface IUIInputListener
+    public interface IInputListener
     {
         void InputNumber(int number);
         void InputHint(int number);

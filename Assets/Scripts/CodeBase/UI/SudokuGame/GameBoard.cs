@@ -10,11 +10,11 @@ using UnityEngine.UI;
 
 namespace CodeBase.UI.SudokuGame
 {
-    public class UIGameBoard : MonoBehaviour, IUIInputListener, ISavedProgress,IThemeReader
+    public class GameBoard : MonoBehaviour, IInputListener, ISavedProgress, IThemeReader
     {
         [SerializeField] private Image _backgroundGame;
         [SerializeField] private Image _background;
-        
+
         [SerializeField] private List<UIBlockCells> _uiBlockCells;
 
         private ISaveLoadService _saveLoadService;
@@ -148,7 +148,7 @@ namespace CodeBase.UI.SudokuGame
             _backgroundGame.color = themeConfigData.BackgroundGameColor;
             _background.color = themeConfigData.BackgroundColor;
         }
-        
+
         private void OnClickCell(CellNumber cellNumber)
         {
             _boardData.SetSelectedCell(cellNumber);

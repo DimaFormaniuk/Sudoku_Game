@@ -27,5 +27,16 @@ namespace CodeBase.Data
             }
             return GenericEnum.ToString();
         }
+
+        public static string ConvertToTime(this long tick)
+        {
+            TimeSpan time = new TimeSpan(tick);
+            return time.ConvertToTime();
+        }
+
+        public static string ConvertToTime(this TimeSpan time)
+        {
+            return time.ToString(time.Hours > 0 ? @"hh\:mm\:ss" : @"mm\:ss");
+        }
     }
 }

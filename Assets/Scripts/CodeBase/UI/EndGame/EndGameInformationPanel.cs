@@ -15,7 +15,7 @@ namespace CodeBase.UI.EndGame
         {
             difficultText.text = $"{playerProgress.LastGameData.DifficultyGame}";
             levelText.text = $"{playerProgress.LastGameData.IndexLevel}";
-            timeText.text = $"{playerProgress.LastGameData.Time}";
+            timeText.text = $"{playerProgress.LastGameData.Time.ConvertToTime()}";
         }
     }
 }

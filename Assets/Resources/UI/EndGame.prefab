@@ -338,8 +338,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: -2413806693520163455, guid: 9fba5ef9d5b28a844a1f450b318b211a, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -511,8 +511,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: -2413806693520163455, guid: 9fba5ef9d5b28a844a1f450b318b211a, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -938,6 +938,7 @@ GameObject:
   - component: {fileID: 3504744014423794481}
   - component: {fileID: 7406173891458492449}
   - component: {fileID: 287707710751174214}
+  - component: {fileID: 7240789443010488912}
   m_Layer: 5
   m_Name: MenuButton
   m_TagString: Untagged
@@ -964,7 +965,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 700, y: 150}
+  m_SizeDelta: {x: 800, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3504744014423794481
 CanvasRenderer:
@@ -987,7 +988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.31132078, b: 0.19986503, a: 1}
+  m_Color: {r: 0.09411766, g: 0.17254902, b: 0.25490198, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1003,7 +1004,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 1.3
 --- !u!114 &287707710751174214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,6 +1049,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7240789443010488912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5669151931535656085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d323201ccd34dc694db1cc498b9677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuButton: {fileID: 287707710751174214}
 --- !u!1 &6530291439014615771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1235,7 +1249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6849b0aad9e3d074994e4a1ba0f1c75a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuButton: {fileID: 287707710751174214}
 --- !u!1 &8698161935731882052
 GameObject:
   m_ObjectHideFlags: 0

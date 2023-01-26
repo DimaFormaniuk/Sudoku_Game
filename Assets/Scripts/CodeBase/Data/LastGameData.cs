@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using CodeBase.UI.Menu;
-using UnityEngine.Serialization;
 
 namespace CodeBase.Data
 {

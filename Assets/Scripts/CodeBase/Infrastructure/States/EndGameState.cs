@@ -8,28 +8,30 @@ namespace CodeBase.Infrastructure.States
     public class EndGameState : IState
     {
         private readonly GameStateMachine _stateMachine;
-        private readonly IUIFactory _uiFactory;
+        private readonly IUIFactoryService _iuiFactoryService;
         private readonly ISaveLoadService _saveLoadService;
         private readonly IPersistentProgressService _progressService;
 
-        public EndGameState(GameStateMachine stateMachine,IUIFactory uiFactory, ISaveLoadService saveLoadService, IPersistentProgressService progressService)
+        public EndGameState(GameStateMachine stateMachine,IUIFactoryService iuiFactoryService, ISaveLoadService saveLoadService, IPersistentProgressService progressService)
         {
             _stateMachine = stateMachine;
-            _uiFactory = uiFactory;
+            _iuiFactoryService = iuiFactoryService;
             _saveLoadService = saveLoadService;
             _progressService = progressService;
         }
 
         public void Enter()
         {
-            _uiFactory.Cleanup();
-            _uiFactory.ClearRoot();
-            _uiFactory.CreateEndGame();
+            _iuiFactoryService.Cleanup();
+            _iuiFactoryService.ClearRoot();
+            _iuiFactoryService.CreateEndGame();
 
             _saveLoadService.InformProgressReaders();
             
             _progressService.Progress.LevelDatas.CompleteLastGame(_progressService.Progress.LastGameData);
             _progressService.Progress.LastGameData = new LastGameData();
+            
+            _saveLoadService.SaveProgress();
         }
 
         public void Exit()

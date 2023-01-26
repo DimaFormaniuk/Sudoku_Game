@@ -1,10 +1,9 @@
 using CodeBase.Infrastructure.Services;
-using CodeBase.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace CodeBase.UI.Services.Factory
 {
-    public interface IUIFactory : IService, ICleanup
+    public interface IUIFactoryService : IService, ICleanup
     {
         void Registered(IRegistered registered);
         GameObject CreateUIRoot();
@@ -13,6 +12,5 @@ namespace CodeBase.UI.Services.Factory
         GameObject CreateContinueGame();
         GameObject CreateEndGame();
         void ClearRoot();
-        void RegisteredAllLife(IRegistered registered);
     }
 }

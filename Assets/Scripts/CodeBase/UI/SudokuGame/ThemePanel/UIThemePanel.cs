@@ -14,6 +14,7 @@ namespace CodeBase.UI.SudokuGame.ThemePanel
         [SerializeField] private Button closeButton;
         [SerializeField] private List<UIThemeButton> uiThemeButtons;
         [SerializeField] private Image selectorThemeButtons;
+        [SerializeField] private Image backgroundImage;
 
         private ThemeConfigData _themeConfigData;
 
@@ -36,6 +37,8 @@ namespace CodeBase.UI.SudokuGame.ThemePanel
         public void UpdateTheme(ThemeConfigData themeConfigData)
         {
             _themeConfigData = themeConfigData;
+
+            backgroundImage.color = _themeConfigData.BaseCellColor;
         }
 
         public void LoadProgress(PlayerProgress playerProgress)

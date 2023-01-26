@@ -3,7 +3,6 @@ using CodeBase.Infrastructure.Services.Ads;
 using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Services.Factory;
 using CodeBase.UI.Services.Theme;
-using Unity.VisualScripting;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -38,8 +37,8 @@ namespace CodeBase.Infrastructure.States
 
         private void SubscribeToFactory()
         {
-            _services.Single<IUIFactory>().RegisteredAllLife(_services.Single<ISaveLoadService>());
-            _services.Single<IUIFactory>().RegisteredAllLife(_services.Single<IThemeService>());
+            _services.Single<IUIFactoryService>().Registered(_services.Single<ISaveLoadService>());
+            _services.Single<IUIFactoryService>().Registered(_services.Single<IThemeService>());
         }
     }
 }

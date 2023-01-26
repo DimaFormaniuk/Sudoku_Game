@@ -6,9 +6,8 @@ using UnityEngine;
 
 namespace CodeBase.UI.Services.Factory
 {
-    public class UIFactory : IUIFactory
+    public class IuiFactoryService : IUIFactoryService
     {
-        private List<IRegistered> _allLifeListRegistered = new List<IRegistered>();
         private List<IRegistered> _listRegistered = new List<IRegistered>();
 
         private readonly IStaticDataService _staticData;
@@ -18,17 +17,12 @@ namespace CodeBase.UI.Services.Factory
 
         private List<GameObject> _gameObjectsInRoot = new List<GameObject>();
 
-        public UIFactory(IStaticDataService staticData, IPersistentProgressService progressService)
+        public IuiFactoryService(IStaticDataService staticData, IPersistentProgressService progressService)
         {
             _staticData = staticData;
             _progressService = progressService;
         }
 
-        public void RegisteredAllLife(IRegistered registered)
-        {
-            _allLifeListRegistered.Add(registered);
-        }        
-        
         public void Registered(IRegistered registered)
         {
             _listRegistered.Add(registered);
@@ -98,7 +92,6 @@ namespace CodeBase.UI.Services.Factory
         private void RegisterWatchers(GameObject gameObject)
         {
             _listRegistered.ForEach(x => x.Register(gameObject));
-            _allLifeListRegistered.ForEach(x => x.Register(gameObject));
         }
 
         public void Cleanup()

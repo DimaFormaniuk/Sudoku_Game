@@ -19,10 +19,11 @@ namespace CodeBase.UI.Menu
 
         public void LoadProgress(PlayerProgress playerProgress)
         {
-            if (playerProgress.LevelDatas.CompletedLevel.ContainsKey(_difficultyType))
+            int count = playerProgress.LevelDatas.DifficultyLevelData.GetLevelData(_difficultyType).CompletedLevel.Count;
+
+            if (count > 0)
             {
-                int count = playerProgress.LevelDatas.CompletedLevel[_difficultyType].Count;
-                _informationText.gameObject.SetActive(count > 0);
+                _informationText.gameObject.SetActive(true);
                 _informationText.text = $"{count}/{Constants.LevelCount}";
             }
             else

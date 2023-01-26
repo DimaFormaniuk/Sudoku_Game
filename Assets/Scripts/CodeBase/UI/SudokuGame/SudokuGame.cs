@@ -4,6 +4,7 @@ using CodeBase.Infrastructure.Services.SaveLoad;
 using CodeBase.UI.Menu;
 using CodeBase.UI.SudokuGame.Input;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CodeBase.UI.SudokuGame
 {
@@ -11,7 +12,7 @@ namespace CodeBase.UI.SudokuGame
     {
         private const string Path = "Levels/Level";
 
-        [SerializeField] private UIGameBoard _uiGameBoard;
+        [FormerlySerializedAs("_uiGameBoard")] [SerializeField] private GameBoard gameBoard;
         [SerializeField] private UIInput _uiInput;
         [SerializeField] private UITopPanel _uiTopPanel;
 
@@ -40,8 +41,8 @@ namespace CodeBase.UI.SudokuGame
         public void NewGame()
         {
             string data = LoadLevel(_difficultyGame, _indexLevel);
-            _uiInput.Init(_uiGameBoard);
-            _uiGameBoard.Init(ParseLevel(data), _uiInput);
+            _uiInput.Init(gameBoard);
+            gameBoard.Init(ParseLevel(data), _uiInput);
 
             _uiTopPanel.NewGame(_difficultyGame);
         }
@@ -59,7 +60,7 @@ namespace CodeBase.UI.SudokuGame
         public void ContinueGame()
         {
             NewGame();
-            _uiGameBoard.LoadUserData(_progressLastGameData);
+            gameBoard.LoadUserData(_progressLastGameData);
 
             _uiTopPanel.ContinueGame();
         }

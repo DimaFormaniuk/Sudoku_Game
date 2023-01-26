@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CodeBase.UI.SudokuGame.Input
 {
-    public class UIInput : MonoBehaviour, IUIInput
+    public class UIInput : MonoBehaviour, IUIInput, IFunctionalButtonsListener
     {
+        [SerializeField] private UIFunctionalButton _uiFunctionalButton;
         [SerializeField] private List<UIButtonNumber> _uiButtonNumbers;
 
-        [SerializeField] private Button _clear;
-        [SerializeField] private Button _hint;
-        [SerializeField] private Button _autoHint;
-
-        private IUIInputListener _inputListener;
+        private IInputListener _inputListener;
 
         private bool _inputNumber = true;
 
-        public void Init(IUIInputListener inputListener)
+        public void Init(IInputListener inputListener)
         {
             _inputListener = inputListener;
+
+            _uiFunctionalButton.Init(this);
 
             InitButtons();
             Subscrible();
@@ -64,31 +62,6 @@ namespace CodeBase.UI.SudokuGame.Input
         {
             for (var i = 0; i < _uiButtonNumbers.Count; i++)
                 _uiButtonNumbers[i].Init(i + 1);
-
-            _clear.onClick.AddListener(OnClickClear);
-            _hint.onClick.AddListener(OnClickHint);
-            _autoHint.onClick.AddListener(OnClickAutoHint);
-        }
-
-        private void OnClickClear()
-        {
-            _inputListener.ClickClear();
-        }
-
-        private void OnClickHint()
-        {
-            _inputNumber = !_inputNumber;
-
-            if (_inputNumber == false)
-                _inputListener.RefreshInputHints();
-
-            if (_inputNumber)
-                RefreshInputsNumber();
-        }
-
-        private void OnClickAutoHint()
-        {
-            _inputListener.AutoHints();
         }
 
         private void Subscrible()
@@ -109,6 +82,27 @@ namespace CodeBase.UI.SudokuGame.Input
                 _inputListener.InputNumber(number);
             else
                 _inputListener.InputHint(number);
+        }
+
+        public void ClickClear()
+        {
+            _inputListener.ClickClear();
+        }
+
+        public void ClickHints()
+        {
+            _inputNumber = !_inputNumber;
+
+            if (_inputNumber == false)
+                _inputListener.RefreshInputHints();
+
+            if (_inputNumber)
+                RefreshInputsNumber();
+        }
+
+        public void AutoHints()
+        {
+            _inputListener.AutoHints();
         }
     }
 }
