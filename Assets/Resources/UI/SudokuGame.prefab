@@ -3127,7 +3127,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _themeButton: {fileID: 4284258656444008037}
   _pauseButton: {fileID: 1083520593374209703}
-  _closeButton: {fileID: 2445118971369241936}
   _iconsList:
   - {fileID: 6950501867566666837}
   - {fileID: 3309885228800441527}
@@ -3191,7 +3190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d73ae5e280a5d43926c057cffd0f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameBoard: {fileID: 2546642797610577077}
+  _gameBoard: {fileID: 2546642797610577077}
   _uiInput: {fileID: 7426198994084537495}
   _uiTopPanel: {fileID: 9148684399429867071}
 --- !u!1 &4753457136933343027

@@ -11,8 +11,8 @@ namespace CodeBase.UI.SudokuGame
     public class SudokuGame : MonoBehaviour, ISavedProgress
     {
         private const string Path = "Levels/Level";
-
-        [FormerlySerializedAs("_uiGameBoard")] [SerializeField] private GameBoard gameBoard;
+        
+        [SerializeField] private GameBoard _gameBoard;
         [SerializeField] private UIInput _uiInput;
         [SerializeField] private UITopPanel _uiTopPanel;
 
@@ -41,8 +41,8 @@ namespace CodeBase.UI.SudokuGame
         public void NewGame()
         {
             string data = LoadLevel(_difficultyGame, _indexLevel);
-            _uiInput.Init(gameBoard);
-            gameBoard.Init(ParseLevel(data), _uiInput);
+            _uiInput.Init(_gameBoard);
+            _gameBoard.Init(ParseLevel(data), _uiInput);
 
             _uiTopPanel.NewGame(_difficultyGame);
         }
@@ -60,7 +60,7 @@ namespace CodeBase.UI.SudokuGame
         public void ContinueGame()
         {
             NewGame();
-            gameBoard.LoadUserData(_progressLastGameData);
+            _gameBoard.LoadUserData(_progressLastGameData);
 
             _uiTopPanel.ContinueGame();
         }

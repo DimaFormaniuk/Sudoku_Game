@@ -4,7 +4,7 @@ namespace CodeBase.UI.SudokuGame
 {
     public class CrossCells : ICrossCells
     {
-        private IBoardData _boardData;
+        private readonly IBoardData _boardData;
 
         public CrossCells(IBoardData boardData)
         {
@@ -26,7 +26,7 @@ namespace CodeBase.UI.SudokuGame
             return numbers;
         }
 
-        private List<CellNumber> GetLinesNumbers(CellNumber cellNumber)
+        public List<CellNumber> GetLinesNumbers(CellNumber cellNumber)
         {
             List<CellNumber> result = new List<CellNumber>();
 
@@ -44,8 +44,40 @@ namespace CodeBase.UI.SudokuGame
             return result;
         }
 
-        private List<CellNumber> GetBlockNumbers(CellNumber cellNumber) =>
-            _boardData.BoardList.FindAll(x => x.IndexBlock == cellNumber.IndexBlock
-                                              && x.IndexCellVector != cellNumber.IndexCellVector);
+        public List<CellNumber> GetBlockNumbers(CellNumber cellNumber) =>
+            GetBlockNumbersFull(cellNumber).FindAll(x => x.IndexCellVector != cellNumber.IndexCellVector);
+
+        public List<CellNumber> GetBlockNumbersFull(CellNumber cellNumber) =>
+            _boardData.BoardList.FindAll(x => x.IndexBlock == cellNumber.IndexBlock);
+
+        public List<CellNumber> GetHorizontalLineNumbers(CellNumber cellNumber) => 
+            GetHorizontalLineNumbersFull(cellNumber).FindAll(x => x.IndexBlock != cellNumber.IndexBlock);
+
+        public List<CellNumber> GetVerticalLineNumbers(CellNumber cellNumber) => 
+            GetVerticalLineNumbersFull(cellNumber).FindAll(x => x.IndexBlock != cellNumber.IndexBlock);
+
+        public List<CellNumber> GetHorizontalLineNumbersFull(CellNumber cellNumber)
+        {
+            List<CellNumber> result = new List<CellNumber>();
+
+            int x = cellNumber.IndexCellVector.x;
+
+            for (int i = 0; i < _boardData.Size; i++)
+                result.Add(_boardData.BoardArray[x, i]);
+
+            return result;
+        }
+
+        public List<CellNumber> GetVerticalLineNumbersFull(CellNumber cellNumber)
+        {
+            List<CellNumber> result = new List<CellNumber>();
+
+            int y = cellNumber.IndexCellVector.y;
+
+            for (int i = 0; i < _boardData.Size; i++)
+                result.Add(_boardData.BoardArray[i, y]);
+
+            return result;
+        }
     }
 }

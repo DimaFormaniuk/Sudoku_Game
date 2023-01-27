@@ -16,10 +16,14 @@ namespace CodeBase.UI.Menu
         [SerializeField] private Button _button;
         [SerializeField] private TMP_Text _text;
 
-
         public void Init(int index, bool completed)
         {
             Index = index;
+            SetCompleted(completed);
+        }
+
+        public void SetCompleted(bool completed)
+        {
             _completed = completed;
 
             Refresh();
@@ -38,12 +42,14 @@ namespace CodeBase.UI.Menu
         private void ClickCell() =>
             Click?.Invoke(this);
 
-        public void Refresh()
+        private void Refresh()
         {
             _text.text = Index.ToString();
 
             if (_completed)
                 _text.color = Color.green;
+            else
+                _text.color = Color.white;
         }
     }
 }

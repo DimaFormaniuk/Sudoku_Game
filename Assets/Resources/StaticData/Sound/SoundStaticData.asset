@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc45e259eb5e4813861f897e57f306cc, type: 3}
+  m_Name: SoundStaticData
+  m_EditorClassIdentifier: 
+  configs:
+  - SoundType: 0
+    Clip: {fileID: 8300000, guid: 5777e7fcf61bddc478ec8bbe8ff3fc9b, type: 3}
+    Volume: 0.8
+    Pitch: 1
+  - SoundType: 1
+    Clip: {fileID: 8300000, guid: f9589737365c27d43869cea5081ba981, type: 3}
+    Volume: 1
+    Pitch: 1
+  - SoundType: 2
+    Clip: {fileID: 8300000, guid: d694649c833c5fe4d8acf544cd0ea256, type: 3}
+    Volume: 0.8
+    Pitch: 0.7
+  - SoundType: 3
+    Clip: {fileID: 8300000, guid: 6939f75d53afacd44b297c879ff944f5, type: 3}
+    Volume: 1
+    Pitch: 1
+  - SoundType: 4
+    Clip: {fileID: 8300000, guid: d694649c833c5fe4d8acf544cd0ea256, type: 3}
+    Volume: 1
+    Pitch: 1
+  - SoundType: 5
+    Clip: {fileID: 8300000, guid: 88868b6efefcdd149b667baa906ea825, type: 3}
+    Volume: 1
+    Pitch: 1
+  - SoundType: 6
+    Clip: {fileID: 8300000, guid: fa7854d3f02136a4f9d3fb4345f809e8, type: 3}
+    Volume: 0.7
+    Pitch: 1

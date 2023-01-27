@@ -30,6 +30,8 @@ namespace CodeBase.UI.SudokuGame
         private ILoadBoard _loadBoard;
         private IRefresherBoardNumbers _refresherBoardNumbers;
         private IRefresherBoardHints _refresherBoardHints;
+        private IBoardSound _boardSound;
+        private ICheckerCompleteBlock _checkerCompleteBlock;
 
         public void Init(List<int> parseData, IUIInput input)
         {
@@ -54,7 +56,10 @@ namespace CodeBase.UI.SudokuGame
             _refresherBoardNumbers = new RefresherBoardNumbers(_boardData);
             _refresherBoardHints = new RefresherBoardHints(_boardData, _crossCells);
 
-            Subscrible();
+            _boardSound = new BoardSound(_boardData);
+            _checkerCompleteBlock = new CheckerCompleteBlock(_boardData, _crossCells, _boardSound);
+
+            Subscribe();
 
             _refresherBoardNumbers.RefreshBoard();
             RefreshLeftCountNumber();
@@ -62,7 +67,7 @@ namespace CodeBase.UI.SudokuGame
 
         private void OnDestroy()
         {
-            Unsubscrible();
+            Unsubscribe();
         }
 
         public void InputNumber(int number)
@@ -71,6 +76,8 @@ namespace CodeBase.UI.SudokuGame
             _checkerError.CheckError();
             _refresherBoardHints.RefreshUserInputHints();
             _checkerEndGame.CheckEndGame();
+            _boardSound.InputNumber();
+            _checkerCompleteBlock.CheckCompleteBlockOrLine();
 
             RefreshLeftCountNumber();
             SaveGame();
@@ -101,6 +108,7 @@ namespace CodeBase.UI.SudokuGame
             _refresherBoardNumbers.RefreshBoard();
             _refresherBoardNumbers.ShowAllTheSameNumber();
             _checkerError.CheckError();
+            _boardSound.ClickClear();
 
             RefreshLeftCountNumber();
             SaveGame();
@@ -160,12 +168,12 @@ namespace CodeBase.UI.SudokuGame
             RefreshInputHints();
         }
 
-        private void Subscrible()
+        private void Subscribe()
         {
             _boardData.BoardList.ForEach(x => x.ClickCell += OnClickCell);
         }
 
-        private void Unsubscrible()
+        private void Unsubscribe()
         {
             _boardData.BoardList.ForEach(x => x.ClickCell -= OnClickCell);
         }

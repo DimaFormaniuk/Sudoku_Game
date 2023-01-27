@@ -11,7 +11,8 @@ namespace CodeBase.UI.SudokuGame
         public bool CorrectNumber => _correctNumber;
 
         [SerializeField] private TMP_Text _numberText;
-
+        [SerializeField] private Animation _animation;
+        
         private CellNumberStatus _cellNumberStatus;
         private ThemeConfigData _themeConfigData;
         private bool _correctNumber;
@@ -31,6 +32,8 @@ namespace CodeBase.UI.SudokuGame
         public void UpdateTheme(ThemeConfigData themeConfigData)
         {
             _themeConfigData = themeConfigData;
+            
+            RefreshUI();
         }
 
         public void SetUserNumber(int number)
@@ -43,10 +46,11 @@ namespace CodeBase.UI.SudokuGame
                 ClearNumber();
                 return;
             }
-
+            _correctNumber = false;
             Number = number;
 
             RefreshUI();
+            _animation.Play("UserNumber");
         }
 
         public void ClearNumber()
@@ -66,6 +70,7 @@ namespace CodeBase.UI.SudokuGame
             _cellNumberStatus = CellNumberStatus.ErrorNumber;
 
             RefreshUI();
+            _animation.Play("ErrorNumber");
         }
 
         public void CellCorrectNumber()
@@ -74,6 +79,11 @@ namespace CodeBase.UI.SudokuGame
             _correctNumber = true;
 
             RefreshUI();
+        }
+        
+        public void CompleteBlockOrLine()
+        {
+            _animation.Play("CompleteBlockOrLine");
         }
 
         private void RefreshUI()

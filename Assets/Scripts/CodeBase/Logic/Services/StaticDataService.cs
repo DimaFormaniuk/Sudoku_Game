@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeBase.Infrastructure.Services.Sound;
 using CodeBase.StaticData;
 using CodeBase.UI.Services.Theme;
 using UnityEngine;
@@ -11,11 +12,13 @@ namespace CodeBase.Logic.Services
         private const string BaseResourcesPath = "StaticData/";
         private Dictionary<PrefabId, PrefabConfig> _prefabConfigs;
         private List<ThemeConfigData> _themeConfigs;
+        private List<SoundConfigs> _soundConfigs;
 
         public void Load()
         {
             LoadPrefabs();
             LoadTheme();
+            LoadSounds();
         }
 
         public PrefabConfig ForPrefab(PrefabId prefabId) =>
@@ -28,6 +31,11 @@ namespace CodeBase.Logic.Services
             return _themeConfigs;
         }
 
+        public List<SoundConfigs> GetSoundConfigs()
+        {
+            return _soundConfigs;
+        }
+        
         private void LoadPrefabs()
         {
             _prefabConfigs = Resources
@@ -40,6 +48,13 @@ namespace CodeBase.Logic.Services
         {
             _themeConfigs = Resources
                 .Load<ThemeStaticData>(BaseResourcesPath + "Theme/ThemeStaticData")
+                .configs;
+        }
+        
+        private void LoadSounds()
+        {
+            _soundConfigs = Resources
+                .Load<SoundStaticData>(BaseResourcesPath + "Sound/SoundStaticData")
                 .configs;
         }
     }

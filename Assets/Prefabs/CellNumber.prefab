@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5750369638877748385}
   - component: {fileID: 5750369638877748387}
   - component: {fileID: 5750369638877748386}
+  - component: {fileID: 7038235933562008814}
   m_Layer: 5
   m_Name: TextNumber
   m_TagString: Untagged
@@ -135,6 +136,24 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!111 &7038235933562008814
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5750369638877748384}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 68adf9709810f7a41b523113b27dd0ae, type: 2}
+  - {fileID: 7400000, guid: 0204ccc635dfa0a40a615af564b2dd46, type: 2}
+  - {fileID: 7400000, guid: 728ae70ba77b92a4dbf4c13fce6a7642, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &5750369638979153128
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,6 +397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _numberText: {fileID: 5750369638877748386}
+  _animation: {fileID: 7038235933562008814}
 --- !u!114 &4864018686778535086
 MonoBehaviour:
   m_ObjectHideFlags: 0

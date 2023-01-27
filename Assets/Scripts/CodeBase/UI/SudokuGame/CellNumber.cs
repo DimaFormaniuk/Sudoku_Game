@@ -111,5 +111,10 @@ namespace CodeBase.UI.SudokuGame
         {
             ClickCell?.Invoke(this);
         }
+
+        public void CompleteBlockOrLine()
+        {
+            _uiCellNumber.CompleteBlockOrLine();
+        }
     }
 }

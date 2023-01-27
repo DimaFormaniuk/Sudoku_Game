@@ -16,6 +16,7 @@ namespace CodeBase.UI.Menu
 
         private List<UICellButton> _uiCellButtons = new List<UICellButton>();
         private UISelectLevelDifficulty _uiSelectLevelDifficulty;
+        private PlayerProgress _playerProgress;
 
         public void Init(UISelectLevelDifficulty uiSelectLevelDifficulty)
         {
@@ -24,6 +25,8 @@ namespace CodeBase.UI.Menu
 
         public void LoadProgress(PlayerProgress playerProgress)
         {
+            _playerProgress = playerProgress;
+
             Index = playerProgress.LevelMenuData.LastSelectLevel;
 
             InitGrid(playerProgress);
@@ -44,11 +47,13 @@ namespace CodeBase.UI.Menu
         private void Subscribe()
         {
             _uiCellButtons.ForEach(x => x.Click += OnClickCell);
+            _uiSelectLevelDifficulty.UpdateDifficulty += OnUpdateDifficulty;
         }
 
         private void Unsubscribe()
         {
             _uiCellButtons.ForEach(x => x.Click -= OnClickCell);
+            _uiSelectLevelDifficulty.UpdateDifficulty -= OnUpdateDifficulty;
         }
 
         private void RefreshSelector()
@@ -80,6 +85,17 @@ namespace CodeBase.UI.Menu
                 cell.Init(index, data);
                 _uiCellButtons.Add(cell);
             }
+        }
+
+        private void OnUpdateDifficulty()
+        {
+            RefreshGrind();
+        }
+
+        private void RefreshGrind()
+        {
+            foreach (var uiCellButton in _uiCellButtons)
+                uiCellButton.SetCompleted(_playerProgress.LevelDatas.GetData(_uiSelectLevelDifficulty.DifficultyGame, uiCellButton.Index));
         }
     }
 }
