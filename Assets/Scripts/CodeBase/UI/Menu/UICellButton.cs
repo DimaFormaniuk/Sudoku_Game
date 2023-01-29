@@ -1,4 +1,6 @@
 using System;
+using CodeBase.Infrastructure.Services;
+using CodeBase.UI.Services.Theme;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,20 +13,38 @@ namespace CodeBase.UI.Menu
         public event Action<UICellButton> Click;
         public int Index { get; private set; }
 
-        private bool _completed;
-
         [SerializeField] private Button _button;
         [SerializeField] private TMP_Text _text;
 
-        public void Init(int index, bool completed)
+        private MainThemeConfigData _themeConfigs;
+
+        private bool _completed;
+        private bool _saveLevel;
+
+        private void Awake()
+        {
+            _themeConfigs = AllServices.Container.Single<IThemeService>().MainThemeConfigs;
+        }
+
+        public void Init(int index, bool completed, bool saveLevel)
         {
             Index = index;
-            SetCompleted(completed);
+            _completed = completed;
+            _saveLevel = saveLevel;
+
+            Refresh();
         }
 
         public void SetCompleted(bool completed)
         {
             _completed = completed;
+
+            Refresh();
+        }
+
+        public void SetSaveLevel(bool saveLevel)
+        {
+            _saveLevel = saveLevel;
 
             Refresh();
         }
@@ -46,10 +66,18 @@ namespace CodeBase.UI.Menu
         {
             _text.text = Index.ToString();
 
+            RefreshColor();
+        }
+
+        private void RefreshColor()
+        {
+            _text.color = _themeConfigs.BaseLevelColor;
+
             if (_completed)
-                _text.color = Color.green;
-            else
-                _text.color = Color.white;
+                _text.color = _themeConfigs.CompletedLevelColor;
+
+            if (_saveLevel)
+                _text.color = _themeConfigs.SavedLevelColor;
         }
     }
 }

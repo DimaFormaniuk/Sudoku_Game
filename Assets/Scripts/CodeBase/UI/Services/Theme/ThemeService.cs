@@ -11,6 +11,8 @@ namespace CodeBase.UI.Services.Theme
         public List<IThemeReader> ThemeReaders { get; private set; } = new List<IThemeReader>();
         public List<ThemeConfigData> ListThemeConfigs => _themeConfigs;
 
+        public MainThemeConfigData MainThemeConfigs { get; private set; } 
+
         private readonly IStaticDataService _staticDataService;
 
         private List<ThemeConfigData> _themeConfigs;
@@ -23,6 +25,7 @@ namespace CodeBase.UI.Services.Theme
             _staticDataService = staticDataService;
 
             _themeConfigs = _staticDataService.GetThemeConfigs();
+            MainThemeConfigs = _staticDataService.GetMainThemeConfigData();
         }
 
         public void Register(GameObject gameObject)

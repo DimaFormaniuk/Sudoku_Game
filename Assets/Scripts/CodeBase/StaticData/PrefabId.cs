@@ -5,6 +5,7 @@ namespace CodeBase.StaticData
         UIRoot,
         Menu,
         Game,
-        EndGame
+        EndGame,
+        Logo
     }
 }

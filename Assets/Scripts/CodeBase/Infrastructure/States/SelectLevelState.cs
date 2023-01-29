@@ -8,8 +8,11 @@ namespace CodeBase.Infrastructure.States
         private readonly GameStateMachine _gameStateMachine;
         private readonly IUIFactoryService _iuiFactoryService;
         private readonly ISaveLoadService _saveLoadService;
-        
-        public SelectLevelState(GameStateMachine gameStateMachine, IUIFactoryService iuiFactoryService, ISaveLoadService saveLoadService)
+
+        private bool _showLogo = false;
+
+        public SelectLevelState(GameStateMachine gameStateMachine, IUIFactoryService iuiFactoryService,
+            ISaveLoadService saveLoadService)
         {
             _saveLoadService = saveLoadService;
             _iuiFactoryService = iuiFactoryService;
@@ -22,11 +25,22 @@ namespace CodeBase.Infrastructure.States
             _iuiFactoryService.ClearRoot();
             _iuiFactoryService.CreateMenu();
 
+            ShowLogo();
+
             _saveLoadService.InformProgressReaders();
         }
 
         public void Exit()
         {
+        }
+        
+        private void ShowLogo()
+        {
+            if (_showLogo)
+                return;
+
+            _showLogo = true;
+            _iuiFactoryService.CreateLogo();
         }
     }
 }

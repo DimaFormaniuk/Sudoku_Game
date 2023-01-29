@@ -12,5 +12,6 @@ namespace CodeBase.UI.Services.Factory
         GameObject CreateContinueGame();
         GameObject CreateEndGame();
         void ClearRoot();
+        void CreateLogo();
     }
 }

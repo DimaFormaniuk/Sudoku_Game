@@ -13,7 +13,8 @@ namespace CodeBase.Logic.Services
         private Dictionary<PrefabId, PrefabConfig> _prefabConfigs;
         private List<ThemeConfigData> _themeConfigs;
         private List<SoundConfigs> _soundConfigs;
-
+        private MainThemeConfigData _mainThemeConfigData;
+        
         public void Load()
         {
             LoadPrefabs();
@@ -35,6 +36,11 @@ namespace CodeBase.Logic.Services
         {
             return _soundConfigs;
         }
+
+        public MainThemeConfigData GetMainThemeConfigData()
+        {
+            return _mainThemeConfigData;
+        }
         
         private void LoadPrefabs()
         {
@@ -46,9 +52,10 @@ namespace CodeBase.Logic.Services
 
         private void LoadTheme()
         {
-            _themeConfigs = Resources
-                .Load<ThemeStaticData>(BaseResourcesPath + "Theme/ThemeStaticData")
-                .configs;
+            var tmp = Resources.Load<ThemeStaticData>(BaseResourcesPath + "Theme/ThemeStaticData");
+            
+            _themeConfigs = tmp.configs;
+            _mainThemeConfigData = tmp.mainThemeConfigData;
         }
         
         private void LoadSounds()

@@ -10,8 +10,8 @@ namespace CodeBase.Logic.Services
     {
         void Load();
         PrefabConfig ForPrefab(PrefabId prefabId);
-
         List<ThemeConfigData> GetThemeConfigs();
+        MainThemeConfigData GetMainThemeConfigData();
         List<SoundConfigs> GetSoundConfigs();
     }
 }

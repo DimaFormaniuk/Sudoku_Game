@@ -70,7 +70,6 @@ namespace CodeBase.UI.SudokuGame
             _cellNumberStatus = CellNumberStatus.ErrorNumber;
 
             RefreshUI();
-            _animation.Play("ErrorNumber");
         }
 
         public void CellCorrectNumber()
@@ -86,6 +85,13 @@ namespace CodeBase.UI.SudokuGame
             _animation.Play("CompleteBlockOrLine");
         }
 
+        public void ErrorInput()
+        {
+            Error();
+            
+            _animation.Play("ErrorNumber");
+        }
+        
         private void RefreshUI()
         {
             _numberText.text = $"{Number}";

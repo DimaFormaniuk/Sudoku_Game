@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aa58554dc8943179941e683a8678131, type: 3}
   m_Name: ThemeStaticData
   m_EditorClassIdentifier: 
+  mainThemeConfigData:
+    BaseLevelColor: {r: 0, g: 0, b: 0, a: 0.43137255}
+    CompletedLevelColor: {r: 0.98039216, g: 0.8627451, b: 0.28235295, a: 1}
+    SavedLevelColor: {r: 1, g: 1, b: 1, a: 1}
+    BaseDifficultyColor: {r: 0, g: 0, b: 0, a: 0.5019608}
+    SelectDifficultyColor: {r: 1, g: 1, b: 1, a: 1}
   configs:
   - {fileID: 11400000, guid: 7850effc8ab82274b91329f7d12cd018, type: 2}
   - {fileID: 11400000, guid: 05d0280b6d778f340a42affae59e1726, type: 2}

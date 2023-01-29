@@ -71,6 +71,11 @@ namespace CodeBase.UI.Services.Factory
             _gameObjectsInRoot.Clear();
         }
 
+        public void CreateLogo()
+        {
+            CreatePrefabInRoot(PrefabId.Logo);
+        }
+
         private GameObject CreatePrefabInRoot(PrefabId prefabId)
         {
             var prefab = CreatePrefab(prefabId);

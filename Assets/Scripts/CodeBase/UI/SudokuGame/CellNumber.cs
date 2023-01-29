@@ -116,5 +116,10 @@ namespace CodeBase.UI.SudokuGame
         {
             _uiCellNumber.CompleteBlockOrLine();
         }
+
+        public void ErrorInput()
+        {
+            _uiCellNumber.ErrorInput();
+        }
     }
 }

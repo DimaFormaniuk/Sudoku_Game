@@ -7,6 +7,7 @@ namespace CodeBase.UI.Services.Theme
     public interface IThemeService : IService, IRegistered
     {
         ThemeConfigData CurrentTheme { get; }
+        public MainThemeConfigData MainThemeConfigs { get;} 
         List<ThemeConfigData> ListThemeConfigs { get; }
         void InfomThemeListeners();
         void Cleanup();

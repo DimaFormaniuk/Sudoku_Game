@@ -26,10 +26,9 @@ namespace CodeBase.UI.Menu
         public void LoadProgress(PlayerProgress playerProgress)
         {
             _playerProgress = playerProgress;
-
             Index = playerProgress.LevelMenuData.LastSelectLevel;
 
-            InitGrid(playerProgress);
+            InitGrid();
             Subscribe();
             RefreshSelector();
         }
@@ -75,14 +74,16 @@ namespace CodeBase.UI.Menu
             RefreshSelector(uiCellButton.transform);
         }
 
-        private void InitGrid(PlayerProgress playerProgress)
+        private void InitGrid()
         {
             for (int i = 0; i < Constants.LevelCount; i++)
             {
                 int index = i + 1;
-                bool data = playerProgress.LevelDatas.GetData(_uiSelectLevelDifficulty.DifficultyGame, index);
+                var saveLevel = GetSaveLevel(index);
+                var completedLevel = GetCompletedLevel(index);
+
                 UICellButton cell = Instantiate(_prefabCell, this.transform);
-                cell.Init(index, data);
+                cell.Init(index, completedLevel, saveLevel);
                 _uiCellButtons.Add(cell);
             }
         }
@@ -95,7 +96,25 @@ namespace CodeBase.UI.Menu
         private void RefreshGrind()
         {
             foreach (var uiCellButton in _uiCellButtons)
-                uiCellButton.SetCompleted(_playerProgress.LevelDatas.GetData(_uiSelectLevelDifficulty.DifficultyGame, uiCellButton.Index));
+            {
+                var saveLevel = GetSaveLevel(uiCellButton.Index);
+                var completedLevel = GetCompletedLevel(uiCellButton.Index);
+
+                uiCellButton.SetCompleted(completedLevel);
+                uiCellButton.SetSaveLevel(saveLevel);
+            }
+        }
+
+        private bool GetCompletedLevel(int index)
+        {
+            return _playerProgress.LevelDatas
+                .GetCompletedLevel(_uiSelectLevelDifficulty.DifficultyGame, index);
+        }
+
+        private bool GetSaveLevel(int index)
+        {
+            return _playerProgress.LastGameData.IndexLevel == index && _playerProgress.LastGameData.DifficultyGame ==
+                _uiSelectLevelDifficulty.DifficultyGame;
         }
     }
 }

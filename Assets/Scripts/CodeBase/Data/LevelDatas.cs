@@ -14,7 +14,7 @@ namespace CodeBase.Data
             DifficultyLevelData = new DifficultyLevelData();
         }
 
-        public bool GetData(DifficultyGame difficultyGame, int index)
+        public bool GetCompletedLevel(DifficultyGame difficultyGame, int index)
         {
             return DifficultyLevelData.GetLevelData(difficultyGame).CompletedLevel.Contains(index);
         }

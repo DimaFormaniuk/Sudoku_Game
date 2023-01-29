@@ -1,6 +1,8 @@
 using System;
 using CodeBase.Data;
+using CodeBase.Infrastructure.Services;
 using CodeBase.Infrastructure.Services.SaveLoad;
+using CodeBase.UI.Services.Theme;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,11 +17,43 @@ namespace CodeBase.UI.Menu
 
         [SerializeField] private DifficultyGame _difficultyType;
         [SerializeField] private Button _button;
+        [SerializeField] private TMP_Text _difficultyTypeText;
         [SerializeField] private TMP_Text _informationText;
+
+        private MainThemeConfigData _themeConfigs;
+        private PlayerProgress _playerProgress;
+        private bool _select;
+
+        private void Awake()
+        {
+            _themeConfigs = AllServices.Container.Single<IThemeService>().MainThemeConfigs;
+        }
 
         public void LoadProgress(PlayerProgress playerProgress)
         {
-            int count = playerProgress.LevelDatas.DifficultyLevelData.GetLevelData(_difficultyType).CompletedLevel.Count;
+            _playerProgress = playerProgress;
+
+            Refresh();
+        }
+
+        public void Select()
+        {
+            _select = true;
+
+            RefreshColor();
+        }
+        
+        public void Unselect()
+        {
+            _select = false;
+
+            RefreshColor();
+        }
+
+        private void Refresh()
+        {
+            int count = _playerProgress.LevelDatas.DifficultyLevelData.GetLevelData(_difficultyType).CompletedLevel
+                .Count;
 
             if (count > 0)
             {
@@ -30,6 +64,16 @@ namespace CodeBase.UI.Menu
             {
                 _informationText.gameObject.SetActive(false);
             }
+
+            RefreshColor();
+        }
+
+        private void RefreshColor()
+        {
+            if (_select)
+                _difficultyTypeText.color = _themeConfigs.SelectDifficultyColor;
+            else
+                _difficultyTypeText.color = _themeConfigs.BaseDifficultyColor;
         }
 
         private void OnEnable() =>

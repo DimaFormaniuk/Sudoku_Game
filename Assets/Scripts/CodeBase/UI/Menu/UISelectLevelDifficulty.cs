@@ -53,6 +53,9 @@ namespace CodeBase.UI.Menu
         {
             _selector.transform.SetParent(transform,false);
             _selector.transform.SetAsFirstSibling();
+            
+            _uiDifficultyButtons.ForEach(x=>x.Unselect());
+            _uiDifficultyButtons.Find(x => x.DifficultyType == DifficultyGame).Select();
         }
     }
 }
