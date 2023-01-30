@@ -642,7 +642,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tap to sreen
+  m_text: Tap to screen
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32883feb875354e4abb597e8f5c03918, type: 2}
   m_sharedMaterial: {fileID: 4422936100332139020, guid: 32883feb875354e4abb597e8f5c03918, type: 2}

@@ -10,7 +10,6 @@ namespace Infrastructure.Services.Theme
     {
         public List<IThemeReader> ThemeReaders { get; private set; } = new List<IThemeReader>();
         public List<ThemeConfigData> ListThemeConfigs => _themeConfigs;
-
         public MainThemeConfigData MainThemeConfigs { get; private set; } 
 
         private readonly IStaticDataService _staticDataService;

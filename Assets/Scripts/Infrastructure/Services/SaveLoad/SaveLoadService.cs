@@ -9,6 +9,9 @@ namespace Infrastructure.Services.SaveLoad
     {
         private const string ProgressKey = "Progress";
 
+        public List<ISavedProgressReader> AllLifeProgressReaders { get; } = new List<ISavedProgressReader>();
+        public List<ISavedProgress> AllLifeProgressWriters { get; } = new List<ISavedProgress>();
+        
         public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
         public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
         
@@ -21,23 +24,23 @@ namespace Infrastructure.Services.SaveLoad
 
         public void SaveProgress()
         {
+            SaveProgressAllLife();
+            
             foreach (ISavedProgress progressWriter in ProgressWriters)
                 progressWriter.UpdateProgress(_progressService.Progress);
 
             PlayerPrefs.SetString(ProgressKey, _progressService.Progress.ToJson());
-
-            Debug.Log("Save");
         }
 
         public PlayerProgress LoadProgress()
         {
-            Debug.Log("Load");
-
             return PlayerPrefs.GetString(ProgressKey).AsDeserelize<PlayerProgress>();
         }
         
         public void InformProgressReaders()
         {
+            InformProgressReadersAllLife();
+            
             foreach (ISavedProgressReader progressReader in ProgressReaders)
                 progressReader.LoadProgress(_progressService.Progress);
         }
@@ -60,6 +63,26 @@ namespace Infrastructure.Services.SaveLoad
                 ProgressWriters.Add(progressWriter);
 
             ProgressReaders.Add(progressReader);
+        }
+
+        public void RegisterAllLife(ISavedProgressReader progressReader)
+        {
+            if (progressReader is ISavedProgress progressWriter)
+                AllLifeProgressWriters.Add(progressWriter);
+
+            AllLifeProgressReaders.Add(progressReader);
+        }
+        
+        private void InformProgressReadersAllLife()
+        {
+            foreach (ISavedProgressReader allLifeProgressReader in AllLifeProgressReaders)
+                allLifeProgressReader.LoadProgress(_progressService.Progress);
+        }
+        
+        public void SaveProgressAllLife()
+        {
+            foreach (ISavedProgress allLifeprogressWriter in AllLifeProgressWriters)
+                allLifeprogressWriter.UpdateProgress(_progressService.Progress);
         }
     }
 }

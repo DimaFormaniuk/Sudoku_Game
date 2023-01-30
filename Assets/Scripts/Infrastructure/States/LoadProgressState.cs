@@ -22,7 +22,6 @@ namespace Infrastructure.States
         public void Enter()
         {
             LoadProgressOrInitNew();
-            _saveLoadService.InformProgressReaders();
 
             _stateMachine.Enter<LateRegistrationState>();
         }

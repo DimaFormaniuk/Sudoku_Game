@@ -62,7 +62,7 @@ namespace Infrastructure.States
         private void RegisterThemeService()
         {
             _services.RegisterSingle<IThemeService>(new ThemeService(_services.Single<IStaticDataService>()));
-            _services.Single<ISaveLoadService>().Register((ISavedProgressReader)_services.Single<IThemeService>());
+            _services.Single<ISaveLoadService>().RegisterAllLife((ISavedProgressReader)_services.Single<IThemeService>());
         }
     }
 }

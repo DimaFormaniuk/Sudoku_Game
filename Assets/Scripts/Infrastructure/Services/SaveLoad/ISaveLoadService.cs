@@ -6,6 +6,8 @@ namespace Infrastructure.Services.SaveLoad
 {
     public interface ISaveLoadService : IService, IRegistered
     {
+        List<ISavedProgressReader> AllLifeProgressReaders { get; }
+        List<ISavedProgress> AllLifeProgressWriters { get; }
         List<ISavedProgressReader> ProgressReaders { get; }
         List<ISavedProgress> ProgressWriters { get; }
         void SaveProgress();
@@ -13,5 +15,6 @@ namespace Infrastructure.Services.SaveLoad
         void InformProgressReaders();
         void Cleanup();
         void Register(ISavedProgressReader progressReader);
+        void RegisterAllLife(ISavedProgressReader progressReader);
     }
 }
